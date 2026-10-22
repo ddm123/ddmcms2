@@ -1,0 +1,217 @@
+<?php
+
+/** @var \Admin\Block\Home\Dashboard $this */
+?>
+
+<h3><?php
+echo Ddm::getTranslate('admin')->___('欢迎管理员 %s 登录后台', '<font color="#006600">' . Ddm\StringHelper::singleton()->escapeHtml(Admin\Model\Admin::loggedInAdmin()->admin_name) . '</font>');
+?></h3>
+<dl class="txtbox">
+  <dt>欢迎登录管理平台</dt>
+  <dd>通过登录管理平台，您可以对站点的相关的设置和管理，并可以及时获取官方的更新动态和重要补丁通告。</dd>
+</dl>
+<dl class="txtbox">
+  <dt><?php
+echo Ddm::getTranslate('admin')->translate('官方最新动态');
+?></dt>
+  <dd>
+    <div><?php
+echo Ddm::getTranslate('admin')->___('您当前使用的版本是 %s', '<font color="#FF0000">' . _VERSION_ . '</font>');
+?></div>
+    <div id="customerinfor" style="line-height:1.5em;">
+
+    </div>
+  </dd>
+</dl>
+<dl class="txtbox">
+  <dt><?php
+echo Ddm::getTranslate('admin')->translate('服务器信息');
+?></dt>
+  <dd><span id="phpinfo"><?php
+echo Ddm::getTranslate('admin')->___('当前时间: %s', Ddm::getHelper('core')->formatDateTime($_SERVER['REQUEST_TIME'])) . ', ';
+echo Ddm::getTranslate('admin')->___('时区: %s', $this->getTimezoneName()) . '<br />';
+echo Ddm::getTranslate('admin')->___('当前服务器默认时间: %s', date('Y-m-d H:i:s')) . ', ';
+echo Ddm::getTranslate('admin')->___('默认时区: %s', date_default_timezone_get()) . '<br />';
+echo Ddm::getTranslate('admin')->___('操作系统: %s', PHP_OS) . '<br />';
+echo Ddm::getTranslate('admin')->___('Web服务器: %s', $_SERVER['SERVER_SOFTWARE']) . '<br />';
+echo Ddm::getTranslate('admin')->___('服务器IP: %s', isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : gethostbyname($_SERVER['SERVER_NAME'])) . '<br />';
+echo Ddm::getTranslate('admin')->___('PHP版本: %s', PHP_VERSION) . '<br />';
+echo Ddm::getTranslate('admin')->___('数据库版本: %s', $this->getDbVersion());
+?></span></dd>
+</dl>
+<?php
+if (Ddm::$enableDebug) {
+    ?>
+<div>图标样式参考</div>
+<table border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+    <tr>
+      <td><i class="icon icon-glass"></i><span>icon-glass</span></td>
+      <td><i class="icon icon-music"></i><span>icon-music</span></td>
+      <td><i class="icon icon-search"></i><span>icon-search</span></td>
+      <td><i class="icon icon-envelope"></i><span>icon-envelope</span></td>
+      <td><i class="icon icon-heart"></i><span>icon-heart</span></td>
+      <td><i class="icon icon-star"></i><span>icon-star</span></td>
+      <td><i class="icon icon-star-empty"></i><span>icon-star-empty</span></td>
+      <td><i class="icon icon-user"></i><span>icon-user</span></td>
+      <td><i class="icon icon-film"></i><span>icon-film</span></td>
+      <td><i class="icon icon-th-large"></i><span>icon-th-large</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-th"></i><span>icon-th</span></td>
+      <td><i class="icon icon-th-list"></i><span>icon-th-list</span></td>
+      <td><i class="icon icon-ok"></i><span>icon-ok</span></td>
+      <td><i class="icon icon-remove"></i><span>icon-remove</span></td>
+      <td><i class="icon icon-zoom-in"></i><span>icon-zoom-in</span></td>
+      <td><i class="icon icon-zoom-out"></i><span>icon-zoom-out</span></td>
+      <td><i class="icon icon-off"></i><span>icon-off</span></td>
+      <td><i class="icon icon-signal"></i><span>icon-signal</span></td>
+      <td><i class="icon icon-cog"></i><span>icon-cog</span></td>
+      <td><i class="icon icon-trash"></i><span>icon-trash</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-home"></i><span>icon-home</span></td>
+      <td><i class="icon icon-file"></i><span>icon-file</span></td>
+      <td><i class="icon icon-time"></i><span>icon-time</span></td>
+      <td><i class="icon icon-road"></i><span>icon-road</span></td>
+      <td><i class="icon icon-download-alt"></i><span>icon-download-alt</span></td>
+      <td><i class="icon icon-download"></i><span>icon-download</span></td>
+      <td><i class="icon icon-upload"></i><span>icon-upload</span></td>
+      <td><i class="icon icon-inbox"></i><span>icon-inbox</span></td>
+      <td><i class="icon icon-play-circle"></i><span>icon-play-circle</span></td>
+      <td><i class="icon icon-repeat"></i><span>icon-repeat</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-refresh"></i><span>icon-refresh</span></td>
+      <td><i class="icon icon-list-alt"></i><span>icon-list-alt</span></td>
+      <td><i class="icon icon-lock"></i><span>icon-lock</span></td>
+      <td><i class="icon icon-flag"></i><span>icon-flag</span></td>
+      <td><i class="icon icon-headphones"></i><span>icon-headphones</span></td>
+      <td><i class="icon icon-volume-off"></i><span>icon-volume-off</span></td>
+      <td><i class="icon icon-volume-down"></i><span>icon-volume-down</span></td>
+      <td><i class="icon icon-volume-up"></i><span>icon-volume-up</span></td>
+      <td><i class="icon icon-qrcode"></i><span>icon-qrcode</span></td>
+      <td><i class="icon icon-barcode"></i><span>icon-barcode</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-tag"></i><span>icon-tag</span></td>
+      <td><i class="icon icon-tags"></i><span>icon-tags</span></td>
+      <td><i class="icon icon-book"></i><span>icon-book</span></td>
+      <td><i class="icon icon-bookmark"></i><span>icon-bookmark</span></td>
+      <td><i class="icon icon-print"></i><span>icon-print</span></td>
+      <td><i class="icon icon-camera"></i><span>icon-camera</span></td>
+      <td><i class="icon icon-font"></i><span>icon-font</span></td>
+      <td><i class="icon icon-bold"></i><span>icon-bold</span></td>
+      <td><i class="icon icon-italic"></i><span>icon-italic</span></td>
+      <td><i class="icon icon-text-height"></i><span>icon-text-height</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-text-width"></i><span>icon-text-width</span></td>
+      <td><i class="icon icon-align-left"></i><span>icon-align-left</span></td>
+      <td><i class="icon icon-align-center"></i><span>icon-align-center</span></td>
+      <td><i class="icon icon-align-right"></i><span>icon-align-right</span></td>
+      <td><i class="icon icon-align-justify"></i><span>icon-align-justify</span></td>
+      <td><i class="icon icon-list"></i><span>icon-list</span></td>
+      <td><i class="icon icon-indent-left"></i><span>icon-indent-left</span></td>
+      <td><i class="icon icon-indent-right"></i><span>icon-indent-right</span></td>
+      <td><i class="icon icon-facetime-video"></i><span>icon-facetime-video</span></td>
+      <td><i class="icon icon-picture"></i><span>icon-picture</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-pencil"></i><span>icon-pencil</span></td>
+      <td><i class="icon icon-map-marker"></i><span>icon-map-marker</span></td>
+      <td><i class="icon icon-adjust"></i><span>icon-adjust</span></td>
+      <td><i class="icon icon-tint"></i><span>icon-tint</span></td>
+      <td><i class="icon icon-edit"></i><span>icon-edit</span></td>
+      <td><i class="icon icon-share"></i><span>icon-share</span></td>
+      <td><i class="icon icon-check"></i><span>icon-check</span></td>
+      <td><i class="icon icon-move"></i><span>icon-move</span></td>
+      <td><i class="icon icon-step-backward"></i><span>icon-step-backward</span></td>
+      <td><i class="icon icon-fast-backward"></i><span>icon-fast-backward</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-backward"></i><span>icon-backward</span></td>
+      <td><i class="icon icon-play"></i><span>icon-play</span></td>
+      <td><i class="icon icon-pause"></i><span>icon-pause</span></td>
+      <td><i class="icon icon-stop"></i><span>icon-stop</span></td>
+      <td><i class="icon icon-forward"></i><span>icon-forward</span></td>
+      <td><i class="icon icon-fast-forward"></i><span>icon-fast-forward</span></td>
+      <td><i class="icon icon-step-forward"></i><span>icon-step-forward</span></td>
+      <td><i class="icon icon-eject"></i><span>icon-eject</span></td>
+      <td><i class="icon icon-chevron-left"></i><span>icon-chevron-left</span></td>
+      <td><i class="icon icon-chevron-right"></i><span>icon-chevron-right</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-plus-sign"></i><span>icon-plus-sign</span></td>
+      <td><i class="icon icon-minus-sign"></i><span>icon-minus-sign</span></td>
+      <td><i class="icon icon-remove-sign"></i><span>icon-remove-sign</span></td>
+      <td><i class="icon icon-ok-sign"></i><span>icon-ok-sign</span></td>
+      <td><i class="icon icon-question-sign"></i><span>icon-question-sign</span></td>
+      <td><i class="icon icon-info-sign"></i><span>icon-info-sign</span></td>
+      <td><i class="icon icon-screenshot"></i><span>icon-screenshot</span></td>
+      <td><i class="icon icon-remove-circle"></i><span>icon-remove-circle</span></td>
+      <td><i class="icon icon-ok-circle"></i><span>icon-ok-circle</span></td>
+      <td><i class="icon icon-ban-circle"></i><span>icon-ban-circle</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-arrow-left"></i><span>icon-arrow-left</span></td>
+      <td><i class="icon icon-arrow-right"></i><span>icon-arrow-right</span></td>
+      <td><i class="icon icon-arrow-up"></i><span>icon-arrow-up</span></td>
+      <td><i class="icon icon-arrow-down"></i><span>icon-arrow-down</span></td>
+      <td><i class="icon icon-share-alt"></i><span>icon-share-alt</span></td>
+      <td><i class="icon icon-resize-full"></i><span>icon-resize-full</span></td>
+      <td><i class="icon icon-resize-small"></i><span>icon-resize-small</span></td>
+      <td><i class="icon icon-plus"></i><span>icon-plus</span></td>
+      <td><i class="icon icon-minus"></i><span>icon-minus</span></td>
+      <td><i class="icon icon-asterisk"></i><span>icon-asterisk</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-exclamation-sign"></i><span>icon-exclamation-sign</span></td>
+      <td><i class="icon icon-gift"></i><span>icon-gift</span></td>
+      <td><i class="icon icon-leaf"></i><span>icon-leaf</span></td>
+      <td><i class="icon icon-fire"></i><span>icon-fire</span></td>
+      <td><i class="icon icon-eye-open"></i><span>icon-eye-open</span></td>
+      <td><i class="icon icon-eye-close"></i><span>icon-eye-close</span></td>
+      <td><i class="icon icon-warning-sign"></i><span>icon-warning-sign</span></td>
+      <td><i class="icon icon-plane"></i><span>icon-plane</span></td>
+      <td><i class="icon icon-calendar"></i><span>icon-calendar</span></td>
+      <td><i class="icon icon-random"></i><span>icon-random</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-comment"></i><span>icon-comment</span></td>
+      <td><i class="icon icon-magnet"></i><span>icon-magnet</span></td>
+      <td><i class="icon icon-chevron-up"></i><span>icon-chevron-up</span></td>
+      <td><i class="icon icon-chevron-down"></i><span>icon-chevron-down</span></td>
+      <td><i class="icon icon-retweet"></i><span>icon-retweet</span></td>
+      <td><i class="icon icon-shopping-cart"></i><span>icon-shopping-cart</span></td>
+      <td><i class="icon icon-folder-close"></i><span>icon-folder-close</span></td>
+      <td><i class="icon icon-folder-open"></i><span>icon-folder-open</span></td>
+      <td><i class="icon icon-resize-vertical"></i><span>icon-resize-vertical</span></td>
+      <td><i class="icon icon-resize-horizontal"></i><span>icon-resize-horizontal</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-hdd"></i><span>icon-hdd</span></td>
+      <td><i class="icon icon-bullhorn"></i><span>icon-bullhorn</span></td>
+      <td><i class="icon icon-bell"></i><span>icon-bell</span></td>
+      <td><i class="icon icon-certificate"></i><span>icon-certificate</span></td>
+      <td><i class="icon icon-thumbs-up"></i><span>icon-thumbs-up</span></td>
+      <td><i class="icon icon-thumbs-down"></i><span>icon-thumbs-down</span></td>
+      <td><i class="icon icon-hand-right"></i><span>icon-hand-right</span></td>
+      <td><i class="icon icon-hand-left"></i><span>icon-hand-left</span></td>
+      <td><i class="icon icon-hand-up"></i><span>icon-hand-up</span></td>
+      <td><i class="icon icon-hand-down"></i><span>icon-hand-down</span></td>
+    </tr>
+    <tr>
+      <td><i class="icon icon-circle-arrow-right"></i><span>icon-circle-arrow-right</span></td>
+      <td><i class="icon icon-circle-arrow-left"></i><span>icon-circle-arrow-left</span></td>
+      <td><i class="icon icon-circle-arrow-up"></i><span>icon-circle-arrow-up</span></td>
+      <td><i class="icon icon-circle-arrow-down"></i><span>icon-circle-arrow-down</span></td>
+      <td><i class="icon icon-globe"></i><span>icon-globe</span></td>
+      <td><i class="icon icon-wrench"></i><span>icon-wrench</span></td>
+      <td><i class="icon icon-tasks"></i><span>icon-tasks</span></td>
+      <td><i class="icon icon-filter"></i><span>icon-filter</span></td>
+      <td><i class="icon icon-briefcase"></i><span>icon-briefcase</span></td>
+      <td><i class="icon icon-fullscreen"></i><span>icon-fullscreen</span></td>
+    </tr>
+  </table>
+<?php
+}

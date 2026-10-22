@@ -1,0 +1,161 @@
+<?php
+
+/* @var $this \Language\Block\Adminhtml\Translate */
+$currentModule = $this->getCurrentModule();
+$languageId = Ddm\Request::get('id', 'int', false);
+$translateData = $this->getTranslate();
+$pageLinksBlock = $this->getBlock('page_links');
+?>
+
+<div class="form-content-header">
+  <h3><?php
+echo Ddm::getTranslate('language')->translate('语言翻译');
+?> - <?php
+echo $this->getLanguage()->language_name;
+?></h3>
+  <p class="clear"></p>
+</div>
+<div class="form-content">
+    <div class="setting-container">
+    <div class="setting-left-col">
+        <ul>
+<?php
+foreach ($this->getAllModules() as $moduleName) {
+    ?>
+          <li><a href="<?php
+    echo Ddm::getUrl('*/*', ['id' => $languageId, 'module' => $moduleName]);
+    ?>"<?php
+    if ($currentModule == $moduleName) {
+        echo ' class="active"';
+    }
+    ?>><?php
+    echo $moduleName;
+    ?></a></li>
+<?php
+}
+?>
+        </ul>
+    </div>
+    <div class="setting-rigth-col">
+        <div class="notices-box"><ul class="notices__"><li class="notices"><ul>
+            <li><?php
+echo Ddm::getTranslate('language')->translate('提示：无论当前在第几页，新增的语言都会被保存到最后一页；如果要删除某行，请清空这行的内容就可以');
+?></li>
+            <li><?php
+echo Ddm::getTranslate('language')->___('语言翻译数据越大就越占用服务器内存和影响程序的运行速度，<a href="%s">点击这里可删掉无提供到翻译的语言文字</a>', Ddm::getUrl('*/*/clear-translate', ['id' => $this->getLanguage()->language_id, 'm' => $currentModule, 'p' => $pageLinksBlock ? $pageLinksBlock->getCurrentPage() : false]));
+?></li>
+        </ul></li></ul></div>
+        <form id="translate-search-from" action="<?php
+echo Ddm::getUrl('*/*/*', ['p' => false, 'kw' => false, '_current' => true]);
+?>" method="<?php
+echo Ddm::getConfig()->getConfigValue('web/base/enable_rewrite') ? 'get' : 'post';
+?>">
+            <input type="text" name="kw" class="text" size="60" value="<?php
+echo Ddm\StringHelper::singleton()->escapeHtml(Ddm\Request::get('kw', false, ''));
+?>" style="padding:6px 4px;" verify="1" errormsg="<?php
+echo Ddm::getTranslate('admin')->translate('请输入搜索关键字');
+?>" />
+            <button type="submit" class="btn button btn-primary"><i class="icon icon-white icon-search"></i> <?php
+echo Ddm::getTranslate('core')->translate('搜索');
+?></button>
+        </form>
+        <div>&nbsp;</div>
+  <form action="<?php
+echo Ddm::getLanguage()->getUrl('*/*/save-translate', ['id' => $this->getLanguage()->language_id, 'm' => $currentModule, 'p' => $pageLinksBlock ? $pageLinksBlock->getCurrentPage() : false]);
+?>" method="post" id="edit-translate-form">
+    <input type="hidden" name="kw" value="<?php
+echo trim(Ddm\Request::get('kw', false, ''));
+?>" />
+    <table class="form-list translate" cellspacing="0" border="0">
+      <thead>
+      <tr>
+        <td><?php
+echo Ddm::getTranslate('language')->translate('需要翻译的文字');
+?></td>
+        <td><?php
+echo Ddm::getTranslate('language')->translate('翻译后的文字');
+?></td>
+      </tr>
+      </thead>
+      <tbody id="translate-content">
+<?php
+foreach ($translateData as $data) {
+    ?>
+      <tr>
+        <td><input type="text" class="text" name="t1[<?php
+    echo $data[0];
+    ?>]" value="<?php
+    echo Ddm\StringHelper::singleton()->escapeHtml($data[1]);
+    ?>" /></td>
+        <td><input type="text" class="text" name="t2[<?php
+    echo $data[0];
+    ?>]" value="<?php
+    echo Ddm\StringHelper::singleton()->escapeHtml($data[2]);
+    ?>" /></td>
+      </tr>
+<?php
+}
+?>
+      </tbody>
+      <tfoot>
+      <tr class="buttons">
+        <td><a href="javascript:;" onclick="addRow()"><i class="icon icon-plus"></i> <?php
+echo Ddm::getTranslate('admin')->translate('增加一行');
+?></a></td>
+        <td><?php
+echo $pageLinksBlock ? $pageLinksBlock->toHtml() : '';
+?></td>
+      </tr>
+      <tr class="buttons">
+          <td><button type="button" class="btn" onclick="window.location.href='<?php
+echo Ddm::getLanguage()->getUrl('*/adminhtml');
+?>'"><i class="icon icon-arrow-left"></i> <?php
+echo Ddm::getTranslate('core')->translate('返回');
+?></button>&nbsp;&nbsp;
+        <button type="submit" class="btn btn-primary"><?php
+echo Ddm::getTranslate('admin')->translate('保存');
+?></button></td>
+        <td>&nbsp;</td>
+      </tr>
+      </tfoot>
+    </table>
+  </form>
+</div>
+    </div>
+</div>
+<script type="text/javascript">
+var rowIndex = 0;
+DOMLoaded(function(){
+    var inputs = $id('edit-translate-form').getElementsByTagName('input');
+    if(inputs.length)inputs[0].focus();
+});
+function addRow(){
+    var tr = document.createElement('tr'),td1 = document.createElement('td'),td2 = document.createElement('td');
+    var input1 = document.createElement('input'),input2 = document.createElement('input');
+    input1.setAttribute('type','text');input1.setAttribute('class','text');input1.setAttribute('name','nt1['+rowIndex+']');
+    input2.setAttribute('type','text');input2.setAttribute('class','text');input2.setAttribute('name','nt2['+rowIndex+']');
+    $id('translate-content').appendChild(tr);
+    tr.appendChild(td1);tr.appendChild(td2);
+    td1.appendChild(input1);td2.appendChild(input2);
+    rowIndex++;
+}
+validateForm($id('translate-search-from'),function(form,ev,$this){
+<?php
+if (!Ddm::getConfig()->getConfigValue('web/base/enable_rewrite')) {
+    ?>
+    doane(ev);
+    var url = form.action;
+    url += url.indexOf('?')>0 ? '&' : '?';
+    url += getFormElements(form,true);
+    window.location.href = url;
+<?php
+}
+?>
+},'up');
+</script>
+
+
+
+
+
+

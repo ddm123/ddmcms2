@@ -1,0 +1,104 @@
+<?php
+
+/* @var $this \Admin\Block\Grid */
+$columns = $this->getColumn();
+$actions = $this->getActions();
+?>
+    <form id="grid-form" method="post" action="<?php
+echo $this->getGridUrl();
+?>">
+      <table id="transactionTable" class="gridtable" cellspacing="0" cellpadding="0">
+        <thead>
+          <tr>
+            <th width="26">NO.</th>
+<?php
+foreach ($columns as $columnId => $column) {
+    ?>
+            <th<?php
+    if (!empty($column['sort'])) {
+        ?> class="pointer" sort="<?php
+        echo $columnId;
+        if ($columnId == $sortData['column'] && $sortData['dir']) {
+            echo ",{$sortData['dir']}";
+        }
+        ?>" title="<?php
+        echo Ddm::getTranslate('admin')->translate('点击排序');
+        ?>"<?php
+    }
+    if (!empty($column['width'])) {
+        echo ' width="', $column['width'], '"';
+    }
+    ?>><?php
+    echo $column['label'];
+    ?></th>
+<?php
+}
+?>
+          </tr>
+        </thead>
+        <tbody>
+<?php
+$startNo = $this->getStartNo();
+foreach ($this->getListData() as $row) {
+    ?>
+          <tr<?php
+    if ($startNo % 2 == 0) {
+        echo ' class="alternateRow"';
+    }
+    ?>>
+              <td class="no" nowrap="nowrap"><?php
+    if ($this->primaryKey && !$this->isDisableRow($row)) {
+        ?><input type="checkbox" name="<?php
+        echo $this->idName;
+        ?>[]" class="checkbox" value="<?php
+        echo $row[$this->primaryKey];
+        ?>" /><?php
+    }
+    echo $startNo;
+    ?>.</td>
+<?php
+    foreach ($columns as $column) {
+        $callMethod = $column['type'] . 'Type';
+        echo '            ', $this->{$callMethod}($row, $column), "\r\n";
+    }
+    ?>
+          </tr>
+<?php
+    $startNo++;
+}
+?>
+        </tbody>
+      </table>
+      <div class="spacer">
+        <table cellspacing="0">
+          <tr>
+<?php
+if ($actions) {
+    ?>
+            <td><table cellspacing="0" style="width:auto;">
+                <tr>
+                  <td><input type="checkbox" name="selectallcheckbox" id="selectallcheckbox" class="checkbox" /><label for="selectallcheckbox">全选</label></td>
+                  <td>&nbsp;&nbsp;</td>
+                  <td id="actions-select"></td>
+                  <td><button type="button" id="grid-submit-button" class="btn"><?php
+    echo Ddm::getTranslate('core')->translate('提交');
+    ?></button></td>
+                  <td>&nbsp;</td>
+                </tr>
+              </table></td>
+<?php
+}
+?>
+            <td class="align-right"><?php
+echo $this->getBlockHtml('pagelink');
+?></td>
+          </tr>
+        </table>
+      </div>
+    </form>
+
+
+
+
+
+

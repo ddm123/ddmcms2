@@ -1,0 +1,15 @@
+/* Applied to combobox.js */
+
+span.combobox-container {display:inline-block; border:1px solid #CCCCCC;/*vertical-align:middle;*/background-color:#FFFFFF;line-height:100%;}
+span.combobox-container .selectboxinput {display:table;display:inline-block; padding:0px 3px;}
+span.combobox-container .selectboxinput input {border-width:0px;box-shadow:none; background-color:transparent; height:21px;line-height:22px; padding:0; margin:0; vertical-align:middle;}
+span.combobox-container .selectboxinput input.readonly {cursor:pointer;}
+span.combobox-container .selectboxbtn:link,span.combobox-container .selectboxbtn:visited,span.combobox-container .selectboxbtn:hover {width:18px; height:22px; line-height:22px;display:table;display:inline-block; background:url(../images/select_btn.gif) no-repeat center center;border-left:1px solid #CCCCCC; text-decoration:none;}
+span.combobox-container .selectboxinput ul {list-style-type:none; padding:0; margin:0;display:table;display:inline-block; position:absolute; z-index:99; top:21px; left:-1px;border-radius:0px 0px 3px 3px;border:1px solid #DCE0E1;box-shadow:0 4px 6px rgba(0, 0, 0, 0.35); background-color:#FFF; overflow:auto;}
+span.combobox-container .selectboxinput ul li {white-space:nowrap;display:block;text-align:left; *border:1px solid #FFF;}
+span.combobox-container .selectboxinput ul li a:link,span.combobox-container .selectboxinput ul li a:visited {text-decoration:none; color:#333; display:block; line-height:100%; padding:6px 5px; background-color:#FFFFFF;}
+span.combobox-container .selectboxinput ul li a:hover,span.combobox-container .selectboxinput ul li a:focus,span.combobox-container .selectboxinput ul li a.selected {text-decoration:none; color:#FFF; background-color:#3470CC;display:block;}
+span.combobox-container .selectboxinput ul li.line {border-bottom:1px solid #CCC;}
+span.combobox-container .selectboxinput ul li.disabled {color:#999999;padding:3px 5px;}
+span.disabled {background-color:#F0F0F0!important;}
+span.disabled .selectboxinput input {color:#999999;}

@@ -1,0 +1,73 @@
+<?php
+
+/* @var $this \News\Block\Adminhtml\Category\Edit */
+$categories = $this->getCategories();
+$id = $this->getCategory() ? $this->getCategory()->getId() : 0;
+?>
+<div class="setting-container">
+    <div class="setting-left-col">
+        <ul>
+<?php
+if ($categories) {
+    foreach ($categories as $category) {
+        ?>
+            <li>
+                <a href="<?php
+        echo Ddm::getUrl('*/*/delete', ['language' => $this->getLanguageId(), 'id' => $category['value']]);
+        ?>" class="float-right" onclick="return deleteCategory(this)"><?php
+        echo Ddm::getTranslate('admin')->translate('删除');
+        ?></a>
+                <a href="<?php
+        echo Ddm::getUrl('*/*/edit', ['language' => $this->getLanguageId(), 'id' => $category['value']]);
+        ?>"<?php
+        if ($id == $category['value']) {
+            echo ' class="active"';
+        }
+        ?>><?php
+        echo $category['label'] . ' (' . $category['count'] . ')';
+        ?></a>
+            </li>
+<?php
+    }
+}
+?>
+            <li><a href="<?php
+echo Ddm::getUrl('*/*/add');
+?>"<?php
+if (!$id) {
+    echo ' class="active"';
+}
+?>><i class="icon icon-plus"></i> <?php
+echo Ddm::getTranslate('news')->translate('增加分类');
+?></a></li>
+        </ul>
+    </div>
+    <div class="setting-rigth-col">
+        <?php
+include $this->getTemplateFile('widget/form.phtml', 'admin');
+?>
+    </div>
+</div>
+<script type="text/javascript">
+var settingForm = new validateForm($id("edit-setting-form"),false);
+function deleteCategory(a){
+    msg_box("<?php
+echo Ddm::getTranslate('admin')->translate('该操作不可撤消，确定要删除？');
+?>",'<?php
+echo Ddm::getTranslate('core')->translate('提示');
+?>',{
+        "<?php
+echo Ddm::getTranslate('core')->translate('是');
+?>":function(){this.window.close();window.location = a.getAttribute('href');},
+        "<?php
+echo Ddm::getTranslate('core')->translate('否');
+?>":function(){this.window.close();}
+    });
+    return false;
+}
+</script>
+
+
+
+
+

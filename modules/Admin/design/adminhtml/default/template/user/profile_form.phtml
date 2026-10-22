@@ -1,0 +1,168 @@
+<?php
+
+/* @var $this \Admin\Block\Admin\User\Profile */
+$admin = $this->getAdmin();
+?>
+<div class="form-content-header">
+  <h3><?php
+echo $this->titleText;
+?></h3>
+  <p class="clear"></p>
+</div>
+<div class="form-content">
+  <form action="<?php
+echo $this->formAction;
+?>" method="<?php
+echo $this->method;
+?>" id="<?php
+echo $this->formId;
+?>"<?php
+if ($this->hasFile(null)) {
+    echo ' enctype="multipart/form-data"';
+}
+?>>
+    <table class="form-list" cellspacing="0" border="0">
+      <tr>
+          <th class="align-top" style="width:100px;"><?php
+echo Ddm::getTranslate('admin')->translate('用户名');
+if ($admin->edit_name) {
+    echo ' <span class="required">*</span>';
+}
+?></th>
+          <td><?php
+if ($admin->edit_name) {
+    ?><input type="text" name="username" size="32" verify="1" value="<?php
+    echo Ddm\StringHelper::singleton()->escapeHtml($admin->admin_name);
+    ?>" class="text" errormsg="<?php
+    echo Ddm::getTranslate('core')->translate('这是必填项');
+    ?>" /><?php
+} else {
+    echo Ddm\StringHelper::singleton()->escapeHtml($admin->admin_name);
+}
+?></td>
+      </tr>
+<?php
+if ($admin->edit_pass) {
+    ?>
+      <tr>
+          <th class="align-top"><?php
+    echo Ddm::getTranslate('admin')->translate('旧密码');
+    ?></th>
+          <td><input type="password" name="oldpassword" size="32" class="text password" />
+          <p class="notice"><i class="icon icon-hand-up"></i><?php
+    echo Ddm::getTranslate('admin')->translate('如果不需要更改密码，请留空');
+    ?></p></td>
+      </tr>
+      <tr>
+          <th class="align-top"><?php
+    echo Ddm::getTranslate('admin')->translate('新密码');
+    ?></th>
+          <td><input type="password" name="password" size="32" class="text password" />
+          <p class="notice"><i class="icon icon-hand-up"></i><?php
+    echo Ddm::getTranslate('admin')->translate('如果不需要更改密码，请留空');
+    ?></p></td>
+      </tr>
+      <tr>
+          <th class="align-top"><?php
+    echo Ddm::getTranslate('admin')->translate('确认密码');
+    ?></th>
+          <td><input type="password" name="password2" size="32" class="text password" />
+              <p class="notice"><i class="icon icon-hand-up"></i><?php
+    echo Ddm::getTranslate('admin')->translate('重复再输入一次密码');
+    ?></p></td>
+      </tr>
+<?php
+}
+?>
+      <tr>
+          <th class="align-top"><?php
+echo Ddm::getTranslate('admin')->translate('隶属于');
+?></th>
+          <td><?php
+echo implode(', ', $admin->getGroups());
+?></td>
+      </tr>
+      <tr>
+          <th><?php
+echo Ddm::getTranslate('admin')->translate('登录次数');
+?></th>
+          <td><?php
+echo $admin->loginnum;
+?></td>
+      </tr>
+      <tr>
+          <th><?php
+echo Ddm::getTranslate('admin')->translate('最后登录');
+?></th>
+          <td><?php
+echo Ddm::getHelper('core')->formatDateTime($admin->logintime);
+?></td>
+      </tr>
+      <tr>
+          <th><?php
+echo Ddm::getTranslate('admin')->translate('上一次登录');
+?></th>
+          <td><?php
+echo Ddm::getHelper('core')->formatDateTime($admin->prevtime);
+?></td>
+      </tr>
+      <tr>
+          <th><?php
+echo Ddm::getTranslate('core')->translate('选项');
+?></th>
+          <td><p><i class="icon <?php
+echo $admin->is_active ? 'icon-ok' : 'icon-remove';
+?>"></i> 启用</p>
+              <p><i class="icon <?php
+echo $admin->edit_name ? 'icon-ok' : 'icon-remove';
+?>"></i> 允许修改用户名</p>
+              <p><i class="icon <?php
+echo $admin->edit_pass ? 'icon-ok' : 'icon-remove';
+?>"></i> 允许修改密码</p>
+              <p><?php
+echo Ddm::getTranslate('admin')->translate('时区');
+?>: <span id="use-timezone-box" style="display:inline-block;"></span></p>
+              <p class="notice"><i class="icon icon-hand-up"></i><?php
+echo Ddm::getTranslate('admin')->translate('你希望后台使用哪个时区显示时间');
+?></p>
+          </td>
+      </tr>
+      <tr class="buttons">
+        <th>&nbsp;</th>
+        <td>
+<?php
+foreach ($this->getButton() as $key => $button) {
+    echo '    ', $this->getButtonHtml($key) . "\r\n";
+}
+?>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+<script type="text/javascript">
+<!--
+var <?php
+echo $this->formId ? preg_replace_callback('/[^A-Za-z]([A-Za-z])/', [$this, 'getVarnameCallback'], $this->formId) : 'edit_form';
+?> = new validateForm($id("<?php
+echo $this->formId;
+?>"),<?php
+echo $this->getValidateFormSuccessJs() ? 'function(form,event,obj){' . $this->getValidateFormSuccessJs() . ';}' : 'false';
+?>);
+var useDateTimezone;
+<?php
+echo $this->getJs();
+?>
+DOMLoaded(function(){useDateTimezone = (new combobox({"apply":"use-timezone-box",'width':300,'filter':true,'selected':<?php
+echo $this->getUseDateTimezoneSelected();
+?>,'name':'use_timezone','id':'use-timezone','data':<?php
+echo $this->timezonesToJson();
+?>})).init();});
+//-->
+</script>
+
+
+
+
+
+

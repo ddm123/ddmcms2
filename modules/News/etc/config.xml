@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<active>true</active>
+	<version>1.0.0</version>
+	<admin>
+	  <menus>
+	    <news>
+		  <label>新闻</label>
+		  <sort>10</sort>
+		  <childnodes>
+		    <category>
+			  <label>分类</label>
+			  <sort>1</sort>
+			  <href>news/adminhtml-category</href>
+			  <rule read="只读" add="增加" edit="修改" delete="删除" />
+			</category>
+			<news>
+			  <label>新闻</label>
+			  <sort>2</sort>
+			  <href>news/adminhtml-news</href>
+			  <rule read="只读" add="增加" edit="修改" delete="删除" />
+			</news>
+		  </childnodes>
+		</news>
+	  </menus>
+	</admin>
+	<events>
+		<language_delete_after>
+			<type>singleton</type>
+			<class>News\Model\Observer</class>
+			<method>deleteValueFromLanguage</method>
+		</language_delete_after>
+		<attribute_delete_after>
+			<type>singleton</type>
+			<class>News\Model\Observer</class>
+			<method>deleteValuegFromAttribute</method>
+		</attribute_delete_after>
+		<cache_prepare_items_after>
+			<type>singleton</type>
+			<class>News\Model\Observer</class>
+			<method>addCacheItem</method>
+		</cache_prepare_items_after>
+	</events>
+</config>

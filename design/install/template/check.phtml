@@ -1,0 +1,34 @@
+<form method="get" action="./index.php">
+    <input type="hidden" name="step" value="check" />
+    <div class="main-body">
+        <div class="install-ui">
+            <h1>必须解决下面的问题, 安装才能继续</h1>
+            <div class="check-result">
+                <p>当前PHP版本：<?php
+echo $this->getPHPVersion();
+                ?></p>
+                <ol>
+<?php
+foreach ($this->getCheckResult() as $error) {
+    ?>
+                    <li><?php
+    echo $error;
+    ?></li>
+<?php
+}
+                ?>
+                </ol>
+            </div>
+            <div class="buttons"><button type="button" onclick="window.location.href='./index.php?step=welcome'">上一步</button>
+                &nbsp; <button type="submit">我已经重新配置过了, 再检测一次</button></div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+

@@ -1,0 +1,44 @@
+<?php
+
+/* @var $this \Admin\Block\Header */
+?>
+<div class="header">
+  <div class="left"><a href="<?php
+echo Ddm::getLanguage()->getUrl('admin');
+?>" class="logo"><i class="icon icon-white icon-home" style="margin:4px 4px 0 0;"></i>DDMCMS</a></div>
+  <div class="user"><a href="javascript:;" id="admin-user-menus"><i class="icon icon-user"></i>&nbsp;<?php
+echo Ddm\StringHelper::singleton()->escapeHtml(Admin\Model\Admin::loggedInAdmin()->admin_name);
+?>&nbsp;<i class="icon icon-chevron-down"></i></a>
+    <ol>
+      <li><a href="<?php
+echo $this->getProfileUrl();
+?>"><i class="icon icon-edit"></i> <?php
+echo Ddm::getTranslate('admin')->___('我的资料');
+?></a></li>
+      <li><a href="<?php
+echo $this->getLogOutUrl();
+?>"><i class="icon icon-off"></i> <?php
+echo Ddm::getTranslate('admin')->___('退出');
+?></a></li>
+    </ol>
+  </div>
+  <div class="right">
+    <?php
+echo $this->getBlockHtml('memus');
+?>
+  </div>
+</div>
+<script type="text/javascript">
+<!--
+initMenus();
+//-->
+</script>
+<div class="container">
+<?php
+if ($this->getBlock('notice')->getNotice()->getNotices()) {
+    ?>
+  <div class="notices-box"><?php
+    echo $this->getBlock('notice')->getNotice()->toHtml();
+    ?></div>
+<?php
+}

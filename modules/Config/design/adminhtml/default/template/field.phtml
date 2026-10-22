@@ -1,0 +1,24 @@
+<?php
+
+/* @var $this \Config\Block\Adminhtml\Field */
+?>
+    <table class="form-list" cellspacing="0" border="0">
+<?php
+foreach ($this->getElement() as $element) {
+    echo $this->getElementHtml($element);
+}
+?>
+    </table>
+<?php
+if ($this->getJs() != '') {
+    ?>
+<script type="text/javascript">
+<!--
+<?php
+    echo $this->getJs();
+    ?>
+
+//-->
+</script>
+<?php
+}

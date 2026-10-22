@@ -1,0 +1,28 @@
+body,form {margin:0;padding:0;}
+body,div,td,input,textarea {font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:150%;color:#555555;}
+a:link,a:visited {color:#6b9000;text-decoration:underline;}
+a:hover {color:#6b9000;text-decoration:none;}
+.clear {width:99%;clear:both;margin:0;padding:0;float:none;height:1px;overflow:hidden;line-height:100%;}
+
+.container {width:980px;margin:0px auto;}
+.top-line {height:6px;overflow:hidden;background-color:#78a002;border-radius:0 0 6px 6px;}
+.logo {width:99.9999%;overflow:hidden;padding:12px 0;}
+.logo .logo-left {float:left;padding-left:16px;}
+
+.footer {padding:32px 10px;}
+.footer-line {height:6px;overflow:hidden;background-color:#78a002;border-radius:6px 6px 0 0;}
+
+.main-body {padding:20px 32px;border:1px solid #ebebeb;margin:8px 0px;min-height:300px;}
+.install-ui {padding-bottom:32px;padding-top:12px;}
+.install-ui h1 {margin:0 0 12px 0;font-size:22px;color:#6b9000;line-height:100%;}
+.install-ui .license {border:1px solid #333333;padding:0px 12px;}
+.install-ui .buttons {padding:12px; text-align:center;}
+.install-ui .check-result ol {margin:0px;}
+.install-ui .check-result ol li {line-height:200%;color:#FF0000;}
+.install-ui .setting h2 {margin:0 0 12px 0;font-size:16px;line-height:100%;}
+.install-ui .setting label {display:inline-block;width:100px;}
+.install-ui .setting label,.install-ui .setting .text {margin:0 0 6px 0;padding:4px;line-height:130%;}
+
+.errors {border:1px solid #F16048;background-color:#FAEBE7;color:#DF280A;font-weight:bold;padding:10px;line-height:100%;}
+
+button {line-height:100%;font-size:13px;padding:4px 8px;color:#333333;}

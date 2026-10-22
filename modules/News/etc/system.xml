@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<setting>
+	<news module="news">
+		<label>新闻</label>
+		<sort>5</sort>
+		<groups>
+			<display module="news">
+				<label>前台显示</label>
+				<sort>1</sort>
+				<fields>
+					<pagesize>
+						<label>每页显示记录数</label>
+						<sort>1</sort>
+						<form>
+							<type>select</type>
+							<verify>1</verify>
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="15">15</option>
+							<option value="20">20</option>
+							<option value="25">25</option>
+							<option value="30">30</option>
+						</form>
+					</pagesize>
+					<orderby>
+						<label>排序</label>
+						<sort>2</sort>
+						<form>
+							<type>select</type>
+							<verify>1</verify>
+							<option value="0">按创建时间</option>
+							<option value="1">按最后修改时间</option>
+						</form>
+					</orderby>
+				</fields>
+			</display>
+			<cache>
+				<label>缓存设置</label>
+				<sort>3</sort>
+				<fields>
+					<list>
+						<label>列表页缓存有效时间</label>
+						<sort>1</sort>
+						<form>
+							<type>select</type>
+							<verify>1</verify>
+							<edit>true</edit>
+							<filter>true</filter>
+							<notice>单位：分钟</notice>
+							<option value="30">30</option>
+							<option value="60">60</option>
+							<option value="90">90</option>
+							<option value="0">永远</option>
+						</form>
+					</list>
+					<view>
+						<label>详细页缓存有效时间</label>
+						<sort>2</sort>
+						<form>
+							<type>select</type>
+							<verify>1</verify>
+							<edit>true</edit>
+							<filter>true</filter>
+							<notice>单位：分钟</notice>
+							<option value="30">30</option>
+							<option value="60">60</option>
+							<option value="90">90</option>
+							<option value="0">永远</option>
+						</form>
+					</view>
+				</fields>
+			</cache>
+		</groups>
+	</news>
+</setting>

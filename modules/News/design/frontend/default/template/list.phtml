@@ -1,0 +1,49 @@
+<?php
+
+/* @var $this \News\Block\News\ListBlock */
+if ($this->getList()) {
+    ?>
+        <dl class="news-list">
+<?php
+    foreach ($this->getList() as $row) {
+        ?>
+            <dt><span class="float_right gray number"><?php
+        echo Ddm::getHelper('core')->formatDate($row['create_at']);
+        ?></span>
+            <?php
+        if (isset($row['category_name'])) {
+            ?>[ <a href="<?php
+            echo Ddm::getHelper('news')->getCategoryUrlFromUrlKey($row['category_id'], $row['category_url']);
+            ?>"><?php
+            echo $row['category_name'];
+            ?></a> ]<?php
+        }
+        ?>
+            <a target="_blank" href="<?php
+        echo Ddm::getHelper('news')->getNewsUrlFromUrlKey($row['news_id'], $row['url_key']);
+        ?>"><?php
+        echo Ddm\StringHelper::singleton()->escapeHtml($row['title']);
+        ?></a></dt>
+            <dd><?php
+        echo Ddm\StringHelper::singleton()->cutHtml($row['content'], 200);
+        ?>
+            <p class="readall"><a target="_blank" href="<?php
+        echo Ddm::getHelper('news')->getNewsUrlFromUrlKey($row['news_id'], $row['url_key']);
+        ?>">&gt;&gt;<?php
+        echo Ddm::getTranslate('news')->translate('继续阅读全文');
+        ?></a></p></dd>
+<?php
+    }
+    ?>
+        </dl>
+        <div><?php
+    echo $this->getPagesHtml();
+    ?></div>
+<?php
+} else {
+    ?>
+        <div class="no-list"><?php
+    echo $this->translate('暂无新闻');
+    ?></div>
+<?php
+}

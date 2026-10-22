@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<active>true</active>
+	<version>1.1.0</version>
+	<admin>
+	  <menus>
+	    <admin>
+		  <label>管理员</label>
+		  <sort>50</sort>
+		  <childnodes>
+		    <admin_user>
+			  <label>管理员</label>
+			  <sort>5</sort>
+			  <href>admin/admin</href>
+			  <rule read="只读" add="增加" edit="修改" delete="删除" />
+			</admin_user>
+			<admin_group>
+			  <label>管理员组</label>
+			  <sort>10</sort>
+			  <href>admin/group</href>
+			  <rule read="只读" add="增加" edit="修改" delete="删除" />
+			</admin_group>
+		  </childnodes>
+		</admin>
+	  </menus>
+	</admin>
+</config>

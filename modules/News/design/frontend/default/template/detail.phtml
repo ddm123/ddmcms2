@@ -1,0 +1,58 @@
+<?php
+
+/* @var $this \News\Block\News\Detail */
+$news = $this->getNews();
+$newsId = $news->news_id;
+$attributes = [];
+if ($news->author) {
+    $attributes[] = $this->translate('作者') . ': ' . $news->author;
+}
+if ($news->from) {
+    $attributes[] = $this->translate('来源') . ': ' . $news->from;
+}
+$attributes[] = $this->translate('浏览次数') . ': ' . Ddm::getTranslate('core')->___('%s次', $news->views);
+$attributes[] = Ddm::getTranslate('core')->translate('发布时间') . ': ' . Ddm::getHelper('core')->formatDateTime($news->create_at);
+$prvNext = $this->getPrveNext();
+?>
+<div class="news_body">
+  <h1><?php
+echo $news->title;
+?></h1>
+  <div class="news_attribute"><?php
+echo implode(' &nbsp; ', $attributes);
+?></div>
+  <div class="newscontent" id="new_content_text">
+    <div class="body"><?php
+echo $news->content;
+?></div>
+  </div>
+<?php
+if ($prvNext) {
+    ?>
+  <div>&nbsp;</div>
+  <div class="prv_next">
+    <ul>
+<?php
+    foreach ($prvNext as $row) {
+        ?>
+      <li><?php
+        echo $newsId < $row['news_id'] ? $this->translate('下一条') . ': ' : $this->translate('上一条') . ': ';
+        if ($row['category_id']) {
+            echo '[ <a href="' . Ddm::getHelper('news')->getCategoryUrlFromUrlKey($row['category_id'], $row['category_url']) . '">' . $row['category_name'] . '</a> ] ';
+        }
+        echo '<a href="' . Ddm::getHelper('news')->getNewsUrlFromUrlKey($row['news_id'], $row['url_key']) . '">' . Ddm\StringHelper::singleton()->escapeHtml($row['title']) . '</a>';
+        ?></li>
+<?php
+    }
+    ?>
+    </ul>
+  </div>
+<?php
+}
+?>
+</div>
+
+
+
+
+

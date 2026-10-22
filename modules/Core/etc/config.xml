@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<active>true</active>
+	<version>1.0.0</version>
+	<admin>
+	  <menus>
+		<dashboard>
+		  <label>首页</label>
+		  <sort>0</sort>
+		  <href>admin</href>
+		  <rule read="只读" />
+		</dashboard>
+	    <system>
+		  <label>系统</label>
+		  <sort>90</sort>
+		  <childnodes>
+			<cache>
+			  <label>缓存管理</label>
+			  <sort>90</sort>
+			  <href>admin/cache</href>
+			  <rule read="只读" delete="删除" />
+			</cache>
+		  </childnodes>
+		</system>
+	  </menus>
+	</admin>
+	<events>
+		<language_delete_after>
+			<type>singleton</type>
+			<class>Core\Model\Url</class>
+			<method>deleteFromLanguage</method>
+		</language_delete_after>
+		<controller_parse_routing_before>
+			<type>singleton</type>
+			<class>Core\Model\Url</class>
+			<method>matchesUrl</method>
+		</controller_parse_routing_before>
+	</events>
+</config>

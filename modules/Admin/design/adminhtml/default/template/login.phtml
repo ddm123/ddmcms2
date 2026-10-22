@@ -1,0 +1,68 @@
+<?php
+
+/* @var $this \Admin\Block\Admin\Login */
+?>
+<div class="container-login">
+  <div class="row-fluid">
+    <div class="row-fluid">
+      <div class="center login-header">
+        <h2><?php
+echo Ddm::getTranslate('admin')->translate('欢迎登录后台管理中心');
+?></h2>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="well center login-box">
+        <div class="login-box-notice" id="login-box-notice"><?php
+echo $this->getLoginNotice();
+?></div>
+        <form id="login-form" class="form-horizontal" action="<?php
+echo $this->getLoginUrl();
+?>" method="post">
+          <div class="input-prepend" title="Username"><label for="username" class="add-on"><i class="icon icon-user"></i></label><input class="text" name="username" id="username" type="text" value="" verify="1" errormsg="<?php
+echo Ddm::getTranslate('admin')->translate('请填写用户名');
+?>" /></div>
+          <div class="input-prepend" title="Password"><label for="password" class="add-on"><i class="icon icon-lock"></i></label><input class="text" name="password" id="password" type="password" value="" verify="1" errormsg="<?php
+echo Ddm::getTranslate('admin')->translate('密码不能为空');
+?>" /></div>
+          <p class="center"><button type="submit" id="admin-login-btn" class="btn btn-primary" style="width:168px;"><?php
+echo Ddm::getTranslate('admin')->translate('登录');
+?></button></p>
+          <?php
+echo $this->getFormKeyHiddenInput();
+?>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+<!--
+validateForm($id("login-form"),function(form,event){
+    $id('admin-login-btn').innerHTML = "<?php
+echo Ddm::getTranslate('admin')->translate('登录中...');
+?>";
+    Ajax().post(form.action,getFormElements(form,true),function(XHR,result){
+        if(result=="success")window.location.reload(true);
+        else{
+            $id("login-box-notice").innerHTML = result;
+            $id('admin-login-btn').innerHTML = "<?php
+echo Ddm::getTranslate('admin')->translate('登录');
+?>";
+            add_class($id("login-box-notice"),"error");
+        }
+    });
+    doane(event);
+});
+try{
+    $id('username').focus();
+}catch(e){}
+//-->
+</script>
+
+
+
+
+
+

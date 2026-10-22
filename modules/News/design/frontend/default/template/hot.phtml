@@ -1,0 +1,27 @@
+<?php
+
+/* @var $this \News\Block\News\Hot */
+$list = $this->getList(10, false);
+if ($list) {
+    ?>
+<ol>
+<?php
+    foreach ($list as $row) {
+        ?>
+  <li><span><a href="<?php
+        echo Ddm::getHelper('news')->getNewsUrlFromUrlKey($row['news_id'], $row['url_key']);
+        ?>" target="_blank" title="<?php
+        echo Ddm\StringHelper::singleton()->escapeHtml($row['title']);
+        ?>"><?php
+        echo Ddm\StringHelper::singleton()->escapeHtml($row['title']);
+        ?></a></span></li>
+<?php
+    }
+    ?>
+</ol>
+<?php
+} else {
+    ?>
+<p>&nbsp;</p>
+<?php
+}

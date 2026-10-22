@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<setting>
+	<web>
+		<groups>
+			<language module="language">
+				<label>语言设置</label>
+				<sort>2</sort>
+				<fields>
+					<default_name>
+						<label>默认语言名称</label>
+						<sort>10</sort>
+						<global>1</global>
+						<form>
+							<type>text</type>
+							<verify>1</verify>
+						</form>
+					</default_name>
+					<default_code>
+						<label>默认语言代码</label>
+						<sort>15</sort>
+						<global>1</global>
+						<form>
+							<type>text</type>
+							<errormsg><![CDATA[仅允许英文字母、数字或下划线的组合，不可以全是数字]]></errormsg>
+							<verify><![CDATA[/^\w+$/]]></verify>
+						</form>
+					</default_code>
+					<inc_url>
+						<label>网址加入语言代码</label>
+						<sort>20</sort>
+						<global>1</global>
+						<form>
+							<type>yesno</type>
+							<yes value="1">是</yes>
+							<no value="0">否</no>
+							<notice>如果所有语言都使用同一个域名，建议选择“是”</notice>
+						</form>
+					</inc_url>
+					<default_language>
+						<label>网站默认使用的语言</label>
+						<sort>25</sort>
+						<global>1</global>
+						<form>
+							<type>select</type>
+							<source_model method="getLanguageToOption">Language\Model\Helper</source_model>
+						</form>
+					</default_language>
+					<auto_saved>
+						<label>自动保存翻译</label>
+						<sort>30</sort>
+						<form>
+							<type>yesno</type>
+							<yes value="1">是</yes>
+							<no value="0">否</no>
+							<notice>是否将需要翻译的语言自动保存到语言包，建议在网站正式上线后开启，开发环境不建议开启</notice>
+						</form>
+					</auto_saved>
+				</fields>
+			</language>
+		</groups>
+	</web>
+</setting>

@@ -1,0 +1,57 @@
+<?php
+
+/* @var $this \Admin\Block\Footer */
+?>
+</div><!-- End <div class="container"> -->
+<?php
+$allLanguage = Ddm::getLanguage()->getAllLanguage(true);
+$languageCount = count($allLanguage);
+?>
+<div class="footer">
+  <p class="right"><?php
+if ($languageCount > 1) {
+    ?><span id="display-language-switch"><?php
+    echo Ddm::getTranslate('core')->translate('界面语言');
+    ?>: </span><br /><?php
+}
+?>
+    <span style="display:inline-block;padding-top:4px;"><?php
+echo Ddm::getTranslate('core')->translate('当前时区') . ': ' . $this->getTimezoneName();
+?></span></p>
+  <p>Processed in <?php
+echo $this->getRunTime();
+?> second(s), <?php
+echo $this->getQueryCount();
+?> queries, Memory use <?php
+echo $this->getMemoryUsage();
+?>
+  <br /><?php
+echo $this->getCopyrightInfo();
+?></p>
+</div>
+<?php
+if ($languageCount > 1) {
+    ?>
+<script type="text/javascript">
+(new combobox({"apply":"display-language-switch",'filter':false,'data':[<?php
+    $i = 0;
+    $selected = 'false';
+    foreach ($allLanguage as $language) {
+        $lanModel = Ddm::getLanguage($language['language_id']);
+        $url = $lanModel->getUrl('*/*/*', ['_current' => true, Language\Model\Language::LANGUAGE_URL_VARNAME => false]);
+        if ($i++) {
+            echo ',';
+        }
+        echo '["' . $url . '","' . $language['language_name'] . '"]';
+        if (Ddm::getLanguage()->language_id == $language['language_id']) {
+            $selected = '["' . $url . '","' . $language['language_name'] . '"]';
+        }
+    }
+    ?>],'selected':<?php
+    echo $selected;
+    ?>,'name':'display_language_switch','change':function($this,selected){
+    window.location.href = selected[0];
+}})).init();
+</script>
+<?php
+}

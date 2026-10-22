@@ -1,0 +1,51 @@
+<?php
+
+/* @var $this \Core\Block\Frontend\Template */
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<?php
+echo $this->getBlockHtml('head');
+?>
+</head>
+<body>
+<div class="container">
+    <div class="top-line"></div>
+    <div class="logo">
+        <div class="logo-left"><a href="<?php
+echo Ddm::getLanguage()->getHomeUrl();
+?>" title="<?php
+echo Ddm::getSiteName();
+?>"><img src="<?php
+echo $this->getFile('logo.jpg', 'image');
+?>" alt="<?php
+echo Ddm::getSiteName();
+?>" /></a></div>
+        <div class="logo-left">&nbsp;</div>
+    </div>
+</div>
+<div class="container">
+    <div class="menus"><?php
+echo $this->getWidgetHtml('menus');
+?></div>
+</div>
+<div class="container">
+    <?php
+echo $this->getBlockHtml('breadcrumbs');
+echo $this->getBlockHtml('notice');
+echo $this->fetch();
+?>
+</div>
+<div class="container">
+    <div class="footer"><?php
+echo $this->getWidgetHtml('bottom_copyright');
+?></div>
+    <div class="footer-line"></div>
+</div>
+</body>
+</html>
+
+
+
+
+

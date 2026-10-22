@@ -1,0 +1,69 @@
+## default index file
+
+    DirectoryIndex index.html index.php
+
+    RedirectMatch 404 ^.*/(web\.config|nginx\.conf|\.env|composer\.json|composer\.lock|package\.json|package-lock\.lock|\.htaccess|\.htpasswd|LICENSE)$
+    RedirectMatch 404 ^/data/.*\.(php[0-9]*|phtml|phar|pht)(/|$) [NC]
+
+<IfModule mod_rewrite.c>
+
+############################################
+## enable rewrites
+
+    Options +FollowSymLinks
+    RewriteEngine on
+
+    #RewriteBase /
+
+############################################
+## Disable access
+    RewriteCond %{REQUEST_URI} ^/install/.+$
+    RewriteCond %{REQUEST_URI} !^/install/index\.php
+    RewriteRule .* - [L,R=404]
+
+    RewriteCond %{REQUEST_URI} ^/data/.*\.(?:php[0-9]*|phtml|phar|pht)(?:/|$) [NC]
+    RewriteRule ^ - [R=404,L]
+
+    RewriteCond %{REQUEST_URI} ^/data/.+$
+    RewriteCond %{REQUEST_URI} !^/data/uploads/.*$
+    RewriteRule .* - [L,R=404]
+
+    RewriteCond %{REQUEST_URI} ^/(design|lib|modules)/.+\.(php|phtml|xml|sql)$
+    RewriteRule .* - [L,R=404]
+
+############################################
+## always send 404 on missing files in these folders
+
+    RewriteCond %{REQUEST_URI} !(^/data/|\.(js|css|jpg|gif|png)$)
+
+############################################
+## never rewrite for existing files, directories and links
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-l
+
+############################################
+## rewrite everything else to index.php
+
+    RewriteRule .* index.php [L]
+
+</IfModule>
+
+
+############################################
+## Prevent character encoding issues from server overrides
+## If you still have problems, use the second line instead
+
+    AddDefaultCharset Off
+    #AddDefaultCharset UTF-8
+
+<IfModule mod_expires.c>
+
+############################################
+## Add default Expires header
+## http://developer.yahoo.com/performance/rules.html#expires
+
+    ExpiresDefault "access plus 1 year"
+
+</IfModule>

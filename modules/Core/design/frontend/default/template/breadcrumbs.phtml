@@ -1,0 +1,6 @@
+<?php
+
+/* @var $this \Core\Block\Frontend\Breadcrumbs */
+if (count($this->getCrumbs()) > 1) {
+    echo '<div class="breadcrumbs">' . $this->getCrumbsHtml(' &gt; ') . '</div>';
+}

@@ -1,0 +1,65 @@
+<?php
+
+/* @var $this \Admin\Block\Memus */
+?>
+<div class="menus" id="__menus__">
+<?php
+if ($memus = $this->getMemus()) {
+    ?>
+  <ul>
+<?php
+    foreach ($memus as $key => $value) {
+        ?>
+      <li><?php
+        if (isset($value['href'])) {
+            ?>
+          <a href="<?php
+            echo Ddm::getLanguage()->getUrl($value['href']);
+            if ($this->isActiveMemu($key, $value['module'])) {
+                echo '" class="active';
+            }
+            ?>"><?php
+            echo Ddm::getTranslate($value['module'])->translate($value['label']);
+            ?></a><?php
+        } else {
+            ?><span<?php
+            if ($this->isActiveMemu($key, $value['module'])) {
+                echo ' class="active"';
+            }
+            ?>><?php
+            echo Ddm::getTranslate($value['module'])->translate($value['label']);
+            ?></span><?php
+        }
+        if (!empty($value['childnodes'])) {
+            ?>
+      <ul>
+<?php
+            foreach ($value['childnodes'] as $k => $val) {
+                ?>
+        <li><a href="<?php
+                echo Ddm::getLanguage()->getUrl($val['href']);
+                ?>"><?php
+                echo Ddm::getTranslate($val['module'])->translate($val['label']);
+                ?></a></li>
+<?php
+            }
+            ?>
+      </ul>
+<?php
+        }
+        ?>
+    </li>
+<?php
+    }
+    ?>
+  </ul>
+<?php
+}
+?>
+</div>
+
+
+
+
+
+

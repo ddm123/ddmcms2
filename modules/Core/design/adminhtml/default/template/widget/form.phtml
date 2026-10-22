@@ -1,0 +1,108 @@
+<?php
+
+/* @var $this \Admin\Block\Widget\Form */
+if ($this->hasEditor()) {
+    ?>
+<script src="<?php
+    echo Ddm::getCurrentBaseUrl();
+    ?>ckeditor/ckeditor.js" type="text/javascript"></script>
+<script src="<?php
+    echo Ddm::getCurrentBaseUrl();
+    ?>ckeditor/ckfinder/ckfinder.js" type="text/javascript"></script>
+<?php
+}
+?>
+<div class="form-content-header">
+<?php
+if ($backButton = $this->getButton('back')) {
+    ?>
+  <a class="back-button" href="<?php
+    echo Ddm::getLanguage()->getUrl('*/*');
+    ?>" title="<?php
+    echo $backButton['label'];
+    ?>"><i class="icon icon-chevron-left"></i></a>
+<?php
+}
+?>
+  <h3><?php
+echo $this->titleText;
+?></h3>
+  <?php
+if ($this->titleRightHtml) {
+    echo '<div class="right">' . $this->titleRightHtml . "</div>\r\n";
+}
+?>
+  <p class="clear"></p>
+</div>
+<?php
+echo $this->getBlockHtml('language_switch');
+?>
+<div class="form-content">
+  <form action="<?php
+echo $this->formAction;
+?>" method="<?php
+echo $this->method;
+?>" id="<?php
+echo $this->formId;
+?>"<?php
+if ($this->hasFile(null)) {
+    echo ' enctype="multipart/form-data"';
+}
+?>>
+    <table class="form-list" cellspacing="0" border="0">
+<?php
+foreach ($this->getElement() as $element) {
+    echo $this->getElementHtml($element);
+}
+?>
+      <tr class="buttons">
+        <th>&nbsp;</th>
+        <td>
+<?php
+foreach ($this->getButton() as $key => $button) {
+    echo '    ', $this->getButtonHtml($key) . "\r\n";
+}
+?>
+        </td>
+      </tr>
+    </table>
+<?php
+if ($this->getHiddenElements()) {
+    foreach ($this->getHiddenElements() as $data) {
+        ?>
+    <input type="hidden"<?php
+        if ($data['name']) {
+            echo ' name="' . $data['name'] . '"';
+        }
+        if ($data['html_id']) {
+            echo ' id="' . $data['html_id'] . '"';
+        }
+        ?> value="<?php
+        echo Ddm\StringHelper::singleton()->escapeHtml($data['value']);
+        ?>" />
+<?php
+    }
+}
+?>
+  </form>
+</div>
+<script type="text/javascript">
+<!--
+var <?php
+echo $this->formId ? preg_replace_callback('/[^A-Za-z]([A-Za-z])/', [$this, 'getVarnameCallback'], $this->formId) : 'edit_form';
+?> = new validateForm($id("<?php
+echo $this->formId;
+?>"),<?php
+echo $this->getValidateFormSuccessJs() ? 'function(form,event,obj){' . $this->getValidateFormSuccessJs() . ';}' : 'false';
+?>);
+<?php
+echo $this->getJs();
+?>
+
+//-->
+</script>
+
+
+
+
+

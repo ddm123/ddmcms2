@@ -1,0 +1,60 @@
+<?php
+
+/* @var $this \Admin\Block\Cache */
+?>
+<div class="form-content-header">
+  <h3><?php
+echo Ddm::getTranslate('admin')->translate('缓存管理');
+?></h3>
+  <p class="clear"></p>
+</div>
+<div class="form-content">
+    <form action="<?php
+echo Ddm::getUrl('*/*/delete');
+?>" method="post">
+<dl class="cache-list">
+<?php
+foreach ($this->getItem() as $key => $_item) {
+    ?>
+  <dt><input type="checkbox" name="cache[]" value="<?php
+    echo $_item['tags'];
+    ?>" id="<?php
+    echo $key;
+    ?>" />
+    <label for="<?php
+    echo $key;
+    ?>"><?php
+    echo $_item['label'];
+    ?></label></dt>
+<?php
+    if (!empty($_item['description'])) {
+        ?>
+  <dd><?php
+        echo $_item['description'];
+        ?></dd>
+<?php
+    }
+}
+?>
+</dl>
+        <div><a href="javascript:selectAllCache(true);">全选</a> <a href="javascript:selectAllCache(false);">取消全选</a>
+        &nbsp;&nbsp;<button type="submit" class="btn btn-primary"><i class="icon icon-white icon-trash"></i><?php
+echo Ddm::getTranslate('admin')->translate('删除选中');
+?></button>
+        &nbsp;&nbsp;<button type="button" class="btn btn-primary" onclick="window.location.href='<?php
+echo Ddm::getUrl('*/*/clear');
+?>'"><i class="icon icon-white icon-trash"></i><?php
+echo Ddm::getTranslate('admin')->translate('删除所有缓存');
+?></button></div>
+    </form>
+</div>
+<script type="text/javascript">
+function selectAllCache(flag){
+    for(var c = document.getElementsByName('cache[]'),i = c.length;i--;)c[i].checked = flag;
+}
+</script>
+
+
+
+
+

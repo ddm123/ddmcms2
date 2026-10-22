@@ -1,0 +1,277 @@
+<?php
+
+/* @var $this \Admin\Block\Grid */
+$searchColumns = $this->getSearchColumns();
+$filterData = $this->getFilterData();
+$sortData = $this->getSortData();
+$actions = $this->getActions();
+?>
+<div class="datatable">
+  <div class="title">
+    <h3><?php
+echo $this->titleText;
+?></h3>
+<?php
+if ($buttons = $this->getButton()) {
+    ?>
+    <div class="buttons">
+<?php
+    foreach ($buttons as $key => $button) {
+        echo '	  ', $this->getButtonHtml($key) . "\r\n";
+    }
+    ?>
+    </div>
+<?php
+}
+if ($searchColumns) {
+    include $this->getTemplateFile('grid/search.phtml');
+}
+?>
+    <p class="clear"></p>
+  </div>
+  <div class="tableWrapper">
+<?php
+if ($this->getListData()) {
+    include $this->getTemplateFile('grid/items.phtml');
+} else {
+    ?>
+  <div class="notices-box">
+    <ul class="notices__">
+      <li class="notices"><ul><li><?php
+    echo $this->emptyText;
+    ?></li></ul></li>
+    </ul>
+  </div>
+<?php
+}
+?>
+  </div>
+</div>
+<script type="text/javascript">
+<!--
+var grid = new Grid("grid-form","search-grid-form");
+var actions;
+DOMLoaded(function(){
+<?php
+if ($searchColumns) {
+    ?>
+var column = new combobox({'edit':false,'width':80,'data':[<?php
+    $length = count($searchColumns);
+    $i = 0;
+    $columnsType = '';
+    foreach ($searchColumns as $columnId => $column) {
+        echo '["' . $columnId . '","' . Ddm\StringHelper::singleton()->escapeHtml($column['label']) . '"]';
+        if ($column['type'] == 'options') {
+            $columnsType .= '"' . $columnId . '":' . (empty($column['options']) ? '[]' : $this->optionsToComboboxData($column['options']));
+        } else {
+            $columnsType .= '"' . $columnId . '":"' . $column['type'] . '"';
+        }
+        if (++$i < $length) {
+            echo ',';
+            $columnsType .= ',';
+        }
+    }
+    ?>],'apply':'search-grid-column','name':'column'<?php
+    if ($filterData['column'] && isset($searchColumns[$filterData['column']])) {
+        echo ',"selected":["', $filterData['column'], '","', Ddm\StringHelper::singleton()->escapeHtml($searchColumns[$filterData['column']]['label']), '"]';
+    }
+    ?>,'change':function($this,selected){
+    var html = '<input type="text" id="text-input-keyword" class="text keyword" name="keyword" value="<?php
+    if (is_string($filterData['keyword'])) {
+        echo Ddm\StringHelper::singleton()->escapeHtml(strtr($filterData['keyword'], ["'" => "\\'"]));
+    }
+    ?>" verify="1" errormsg="<?php
+    echo Ddm::getTranslate('admin')->translate('请输入搜索关键字');
+    ?>" />';
+    if($id('text-input-keyword')){
+        remove_class($id('text-input-keyword'),"form-invalid");
+        $notice($id('text-input-keyword'));
+    }
+    if(typeof columnsType[selected[0]] == 'string'){
+        switch(columnsType[selected[0]]){
+            case 'currency':case 'number':
+                html = '<?php
+    echo Ddm::getTranslate('admin')->translate('从');
+    ?><input type="text" class="text keyword" id="text-input-keyword-from" name="keyword[from]" value="<?php
+    if (is_array($filterData['keyword']) && isset($filterData['keyword']['from'])) {
+        echo Ddm\StringHelper::singleton()->escapeHtml(strtr($filterData['keyword']['from'], ["'" => "\\'"]));
+    }
+    ?>" style="width:60px;" />';
+                html += '<?php
+    echo Ddm::getTranslate('admin')->translate('至');
+    ?><input type="text" class="text keyword" id="text-input-keyword-to" name="keyword[to]" value="<?php
+    if (is_array($filterData['keyword']) && isset($filterData['keyword']['to'])) {
+        echo Ddm\StringHelper::singleton()->escapeHtml(strtr($filterData['keyword']['to'], ["'" => "\\'"]));
+    }
+    ?>" style="width:60px;" />';
+                break;
+            case 'datetime':case 'date':
+                html = '<?php
+    echo Ddm::getTranslate('admin')->translate('从');
+    ?><input type="text" class="text keyword" id="text-input-keyword-from" name="keyword[from]" value="<?php
+    if (is_array($filterData['keyword']) && isset($filterData['keyword']['from'])) {
+        echo Ddm\StringHelper::singleton()->escapeHtml(strtr($filterData['keyword']['from'], ["'" => "\\'"]));
+    }
+    ?>" style="width:100px;" />';
+                html += '<?php
+    echo Ddm::getTranslate('admin')->translate('至');
+    ?><input type="text" class="text keyword" id="text-input-keyword-to" name="keyword[to]" value="<?php
+    if (is_array($filterData['keyword']) && isset($filterData['keyword']['to'])) {
+        echo Ddm\StringHelper::singleton()->escapeHtml(strtr($filterData['keyword']['to'], ["'" => "\\'"]));
+    }
+    ?>" style="width:100px;" />';
+                break;
+            case 'bool':
+                html = false;
+                if($id('keyword-box')){
+                    $id('keyword-box').innerHTML = '';
+                    (new combobox({'edit':false,'width':16,'data':[[0,"<?php
+    echo Ddm::getTranslate('core')->translate('否');
+    ?>"],[1,"<?php
+    echo Ddm::getTranslate('core')->translate('是');
+    ?>"]],'apply':'keyword-box','name':'keyword','selected':[<?php
+    echo empty($filterData['keyword']) || !is_string($filterData['keyword']) ? '"0","' . Ddm::getTranslate('core')->translate('否') . '"' : '"1","' . Ddm::getTranslate('core')->translate('是') . '"';
+    ?>]})).init();
+                }
+                break;
+        }
+    }else if(typeof columnsType[selected[0]] == 'object'){
+        html = false;
+        if($id('keyword-box')){
+            $id('keyword-box').innerHTML = '';
+            var _selected = null;
+            for(var i = columnsType[selected[0]].length;i--;){
+                if(columnsType[selected[0]][i][0]=="<?php
+    echo empty($filterData['keyword']) || !is_string($filterData['keyword']) ? '' : Ddm\StringHelper::singleton()->escapeHtml($filterData['keyword']);
+    ?>"){
+                    _selected = columnsType[selected[0]][i];
+                    break;
+                }
+            }
+            (new combobox({'edit':false,'data':columnsType[selected[0]],'apply':'keyword-box','name':'keyword','selected':_selected})).init();
+        }
+    }
+    if($id('keyword-box')){
+        if(html!==false)$id('keyword-box').innerHTML = html;
+        if(selected[0]!="<?php
+    echo $filterData['column'];
+    ?>"){
+<?php
+    if (is_string($filterData['keyword'])) {
+        ?>
+            if($id('text-input-keyword'))$id('text-input-keyword').value = '';
+<?php
+    } else {
+        ?>
+            if($id('text-input-keyword-from'))$id('text-input-keyword-from').value = $id('text-input-keyword-to').value = '';
+<?php
+    }
+    ?>
+        }
+    }
+}});
+var columnsType = {<?php
+    echo $columnsType;
+    ?>},selected;
+column.init();
+if(selected = column.getSelected())column.opt.change(column,selected);
+grid.activateSearchForm();
+<?php
+}
+if ($this->getListData()) {
+    ?>
+grid.setRowsClickEvent("<?php
+    echo $this->idName;
+    ?>[]").activateSort().activateModify();
+grid.getFieldVUrl = "<?php
+    echo $this->getFieldValueUrl;
+    ?>";
+grid.saveFieldVUrl = "<?php
+    echo $this->saveFieldValueUrl;
+    ?>";
+<?php
+    if ($actions) {
+        $length = count($actions);
+        $i = 0;
+        ?>
+actions = new combobox({'edit':false,'apply':'actions-select','name':'actions_select','data':[['',"<?php
+        echo Ddm\StringHelper::singleton()->escapeHtml(Ddm::getTranslate('core')->translate('--请选择--'));
+        ?>"],
+<?php
+        $confirm = '';
+        foreach ($actions as $action) {
+            echo '["' . $action['url'] . '","' . Ddm\StringHelper::singleton()->escapeHtml($action['label']) . '"]';
+            if (++$i < $length) {
+                echo ',';
+            }
+            if (isset($action['callback'])) {
+                $confirm == '' or $confirm .= ',';
+                $confirm .= '"' . $action['url'] . '":' . $action['callback'];
+            } elseif (isset($action['confirm'])) {
+                $confirm == '' or $confirm .= ',';
+                $confirm .= '"' . $action['url'] . '":"' . Ddm\StringHelper::singleton()->escapeHtml($action['confirm']) . '"';
+            }
+        }
+        ?>
+]});
+var $confirm = {<?php
+        echo $confirm;
+        ?>};
+actions.init();
+$id('grid-submit-button').onclick = function(){
+    var selected = actions.getSelected();
+    if(selected && selected[0]!=''){
+        if(getCheckbox($name('<?php
+        echo $this->idName;
+        ?>[]'))==''){
+            msg_box("<?php
+        echo Ddm::getTranslate('admin')->translate('没有选择到任何记录');
+        ?>",'<?php
+        echo Ddm::getTranslate('core')->translate('提示');
+        ?>');
+        }else{
+            if(typeof $confirm[selected[0]] == 'undefined'){
+                $id('grid-form').action = selected[0];
+                $id('grid-form').submit();
+            }else if(typeof $confirm[selected[0]] == 'function'){
+                $confirm[selected[0]]($id('grid-form'),selected);
+            }else{
+                msg_box($confirm[selected[0]],'<?php
+        echo Ddm::getTranslate('core')->translate('提示');
+        ?>',{
+                    "<?php
+        echo Ddm::getTranslate('core')->translate('是');
+        ?>":function(){this.window.close();$id('grid-form').action = selected[0];$id('grid-form').submit();},
+                    "<?php
+        echo Ddm::getTranslate('core')->translate('否');
+        ?>":function(){this.window.close();}
+                });
+            }
+        }
+    }
+};
+<?php
+    }
+    ?>
+grid.selectAllRows({checked:false},'<?php
+    echo $this->idName;
+    ?>[]');
+if($id('selectallcheckbox'))$id('selectallcheckbox').onclick = function(){grid.selectAllRows(this,'<?php
+    echo $this->idName;
+    ?>[]')};
+<?php
+}
+?>
+});
+<?php
+echo $this->getJs();
+?>
+
+//-->
+</script>
+
+
+
+
+
+

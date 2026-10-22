@@ -1,0 +1,29 @@
+<?php
+
+/* @var $this \News\Block\News\Category */
+?><ul>
+<?php
+if ($this->getCategories()) {
+    foreach ($this->getCategories() as $category) {
+        ?>
+  <li><span><a href="<?php
+        echo Ddm::getHelper('news')->getCategoryUrlFromUrlKey($category['category_id'], $category['url_key']);
+        ?>"><?php
+        echo Ddm\StringHelper::singleton()->escapeHtml($category['name']);
+        ?></a></span></li>
+<?php
+    }
+} else {
+    ?>
+  <li><?php
+    echo $this->translate('无新闻分类');
+    ?></li>
+<?php
+}
+?>
+</ul>
+
+
+
+
+

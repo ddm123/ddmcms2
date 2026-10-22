@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<setting>
+	<web>
+		<groups>
+			<pages module="cms">
+				<label>页面设置</label>
+				<sort>6</sort>
+				<fields>
+					<home>
+						<label>网站首页</label>
+						<sort>1</sort>
+						<form>
+							<type>select</type>
+							<filter>true</filter>
+							<verify>1</verify>
+							<errormsg>必须使用一个页面作为网站首页</errormsg>
+							<source_model method="getOnepageToOption">Cms\Model\Onepage</source_model>
+						</form>
+					</home>
+					<not_found>
+						<label>404未找到页面</label>
+						<sort>3</sort>
+						<form>
+							<type>select</type>
+							<filter>true</filter>
+							<source_model method="getOnepageToOption" parameters="true">Cms\Model\Onepage</source_model>
+						</form>
+					</not_found>
+				</fields>
+			</pages>
+		</groups>
+	</web>
+</setting>

@@ -1,0 +1,105 @@
+<?php
+
+/* @var $this \Admin\Block\Admin\Group\AllowResources */
+$group = $this->getGroup();
+$allowResources = $group ? $group->getAllows() : null;
+$allowTypeIndex = 0;
+?>
+<div id="allow-resources"<?php
+if ($allowResources && $allowResources == 'all') {
+    echo ' style="display:none;"';
+}
+?>>
+  <div class="notices-box"><ul class="notices__"><li class="notices"><ul>
+    <li><?php
+echo Ddm::getTranslate('admin')->translate('如果某管理员只隶属于一个管理员组, 那么“不设置”就相当于是“不允许”');
+?></li>
+    <li><?php
+echo Ddm::getTranslate('admin')->translate('如果某管理员隶属于两个或两个以上的管理员组, 那么“不设置”表示该管理员组不作任何权限认证, 而是将权限留给其它管理员组进行认证');
+?></li>
+  </ul></li></ul></div>
+  <dl>
+<?php
+foreach ($this->getMemusData() as $key => $value) {
+    ?>
+    <dt class="bold"><?php
+    echo Ddm::getTranslate($value['module'])->translate($value['label']);
+    ?></dt>
+<?php
+    if (empty($value['childnodes'])) {
+        if (isset($value['rule@attributes'])) {
+            ?>
+      <dd><?php
+            $t = $v = '';
+            foreach ($value['rule@attributes'] as $allowType => $allowLabel) {
+                ?>
+        <?php
+                $allowTypeIndex++;
+                $path = strtolower("{$value['module']}/{$key}");
+                $allowType = strtolower($allowType);
+                $t .= '<td>' . Ddm::getTranslate('admin')->translate($allowLabel) . '</td>';
+                $v .= '<td><span id="radio-group-list-box-' . $allowTypeIndex . '" class="radio-group-list-box">';
+                $v .= '<input type="radio" value="" name="resources[' . $path . '][' . $allowType . ']" id="resources-' . $path . '-' . $allowType . '-0"' . (!$allowResources || !isset($allowResources[$path][$allowType]) ? ' checked="checked"' : '') . ' /><label for="resources-' . $path . '-' . $allowType . '-0" class="first" radio_id="resources-' . $path . '-' . $allowType . '-0">' . Ddm::getTranslate('admin')->translate('不设置') . '</label>';
+                $v .= '<input type="radio" value="1" name="resources[' . $path . '][' . $allowType . ']" id="resources-' . $path . '-' . $allowType . '-1"' . ($allowResources && !empty($allowResources[$path][$allowType]) ? ' checked="checked"' : '') . ' /><label for="resources-' . $path . '-' . $allowType . '-1" radio_id="resources-' . $path . '-' . $allowType . '-1">' . Ddm::getTranslate('admin')->translate('允许') . '</label>';
+                $v .= '<input type="radio" value="0" name="resources[' . $path . '][' . $allowType . ']" id="resources-' . $path . '-' . $allowType . '-2"' . ($allowResources && isset($allowResources[$path][$allowType]) && !$allowResources[$path][$allowType] ? ' checked="checked"' : '') . ' /><label for="resources-' . $path . '-' . $allowType . '-2" radio_id="resources-' . $path . '-' . $allowType . '-2">' . Ddm::getTranslate('admin')->translate('不允许') . '</label>';
+                $v .= '</span></td>';
+            }
+            echo '<table border="0"><tr>' . $t . '</tr><tr>' . $v . '</tr></table>';
+            ?></dd>
+<?php
+        }
+    } else {
+        ?>
+    <dd>
+      <dl>
+<?php
+        foreach ($value['childnodes'] as $k => $val) {
+            ?>
+        <dt><?php
+            echo Ddm::getTranslate($val['module'])->translate($val['label']);
+            ?></dt>
+        <dd><?php
+            $t = $v = '';
+            foreach ($val['rule@attributes'] as $allowType => $allowLabel) {
+                ?>
+        <?php
+                $allowTypeIndex++;
+                $path = strtolower("{$val['module']}/{$k}");
+                $allowType = strtolower($allowType);
+                $t .= '<td>' . Ddm::getTranslate('admin')->translate($allowLabel) . '</td>';
+                $v .= '<td><span id="radio-group-list-box-' . $allowTypeIndex . '" class="radio-group-list-box">';
+                $v .= '<input type="radio" value="" name="resources[' . $path . '][' . $allowType . ']" id="resources-' . $path . '-' . $allowType . '-0"' . (!$allowResources || !isset($allowResources[$path][$allowType]) ? ' checked="checked"' : '') . ' /><label for="resources-' . $path . '-' . $allowType . '-0" class="first" radio_id="resources-' . $path . '-' . $allowType . '-0">' . Ddm::getTranslate('admin')->translate('不设置') . '</label>';
+                $v .= '<input type="radio" value="1" name="resources[' . $path . '][' . $allowType . ']" id="resources-' . $path . '-' . $allowType . '-1"' . ($allowResources && !empty($allowResources[$path][$allowType]) ? ' checked="checked"' : '') . ' /><label for="resources-' . $path . '-' . $allowType . '-1" radio_id="resources-' . $path . '-' . $allowType . '-1">' . Ddm::getTranslate('admin')->translate('允许') . '</label>';
+                $v .= '<input type="radio" value="0" name="resources[' . $path . '][' . $allowType . ']" id="resources-' . $path . '-' . $allowType . '-2"' . ($allowResources && isset($allowResources[$path][$allowType]) && !$allowResources[$path][$allowType] ? ' checked="checked"' : '') . ' /><label for="resources-' . $path . '-' . $allowType . '-2" radio_id="resources-' . $path . '-' . $allowType . '-2">' . Ddm::getTranslate('admin')->translate('不允许') . '</label>';
+                $v .= '</span></td>';
+            }
+            echo '<table border="0"><tr>' . $t . '</tr><tr>' . $v . '</tr></table>';
+            ?></dd>
+<?php
+        }
+        ?>
+      </dl>
+    </dd>
+<?php
+    }
+}
+?>
+  </dl>
+</div>
+<script type="text/javascript">
+function showAllowResources(o,selected){
+    $id('allow-resources').style.display = selected[0]==1 ? 'none' : '';
+}
+DOMLoaded(function(){
+<?php
+for ($i = 1; $i <= $allowTypeIndex; $i++) {
+    echo '(new RadioGroup("radio-group-list-box-' . $i . '")).init();';
+}
+?>
+});
+</script>
+
+
+
+
+

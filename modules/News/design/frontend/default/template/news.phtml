@@ -1,0 +1,30 @@
+<?php
+
+/* @var $this \News\Block\News */
+?>
+<div class="two-column-body news-body">
+    <div class="left">
+        <h2><?php
+echo $this->translate('热点新闻');
+?></h2>
+        <?php
+echo $this->getBlockHtml('hot');
+?>
+        <h2><?php
+echo $this->translate('新闻分类');
+?></h2>
+        <?php
+echo $this->getBlockHtml('category');
+?>
+    </div>
+    <div class="right">
+        <?php
+echo $this->getBlockHtml('list');
+?>
+    </div>
+</div>
+
+
+
+
+

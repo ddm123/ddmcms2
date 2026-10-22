@@ -1,0 +1,33 @@
+<?php
+
+/* @var $this \Admin\Block\Grid */
+?>
+    <form method="post" action="<?php
+echo $this->getGridSearchUrl();
+?>" id="search-grid-form">
+    <table border="0" cellpadding="0" cellspacing="0" align="right" class="search">
+        <tr>
+          <td><?php
+echo Ddm::getTranslate('core')->translate('搜索');
+?>:&nbsp;</td>
+          <td><span id="search-grid-column"></span></td>
+          <td id="keyword-box"></td>
+          <td>
+            <button type="submit" class="btn button btn-primary"><i class="icon icon-white icon-search"></i> <?php
+echo Ddm::getTranslate('core')->translate('搜索');
+?></button>
+            <button type="button" class="btn button" onclick="window.location.href='<?php
+echo $this->getResetGridSearchUrl();
+?>'"><i class="icon icon-repeat"></i> <?php
+echo Ddm::getTranslate('core')->translate('重置搜索');
+?></button>
+          </td>
+        </tr>
+    </table>
+    </form>
+
+
+
+
+
+

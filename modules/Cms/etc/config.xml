@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<active>true</active>
+	<version>1.0.0</version>
+	<admin>
+	  <menus>
+	    <cms>
+		  <label>CMS</label>
+		  <sort>15</sort>
+		  <childnodes>
+		    <onepage>
+			  <label>单页面</label>
+			  <sort>1</sort>
+			  <href>cms/adminhtml</href>
+			  <rule read="只读" add="增加" edit="修改" delete="删除" />
+			</onepage>
+			<widget>
+			  <label>自定义块</label>
+			  <sort>2</sort>
+			  <href>cms/adminhtml-widget</href>
+			  <rule read="只读" add="增加" edit="修改" delete="删除" />
+			</widget>
+		  </childnodes>
+		</cms>
+	  </menus>
+	</admin>
+	<events>
+		<language_delete_after>
+			<type>new</type>
+			<class>Cms\Model\Observer</class>
+			<method>deleteConfigFromLanguage</method>
+		</language_delete_after>
+		<attribute_delete_after>
+			<type>new</type>
+			<class>Cms\Model\Observer</class>
+			<method>deleteConfigFromAttribute</method>
+		</attribute_delete_after>
+		<controller_module_notfound>
+			<type>new</type>
+			<class>Cms\Model\Observer</class>
+			<method>matchesCmsPage</method>
+		</controller_module_notfound>
+	</events>
+</config>

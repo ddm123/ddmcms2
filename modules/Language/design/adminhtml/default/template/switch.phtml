@@ -1,0 +1,28 @@
+<?php
+
+/* @var $this \Language\Block\Adminhtml\Switcher */
+$languages = Ddm::getLanguage()->getAllLanguage(true);
+$languageId = Ddm\Request::get($this->getQueryVarName(), true, '0');
+if (count($languages) > 1) {
+    ?>
+<div class="language-switch-tabs">
+    <ul>
+<?php
+    foreach ($languages as $language) {
+        ?>
+        <li><a href="<?php
+        echo $this->getUrl($language['language_id']);
+        ?>"<?php
+        if ($languageId == $language['language_id']) {
+            echo ' class="active"';
+        }
+        ?>><?php
+        echo $language['language_id'] ? $language['language_name'] : Ddm::getTranslate('core')->translate('默认值');
+        ?></a></li>
+<?php
+    }
+    ?>
+    </ul>
+</div>
+<?php
+}

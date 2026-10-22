@@ -1,0 +1,127 @@
+<?php
+
+/* @var $this \Core\Block\Pagelink */
+if ($totalPage = $this->getTotalPage()) {
+    $page = $this->getCurrentPage();
+    $startNum = $this->getStartNum();
+    if ($this->showinput) {
+        ?>
+<script type="text/javascript">
+<!--
+function gotoPage(page){if(/^\d+$/.test(page)){if(page==0)page = 1;else if(page><?php
+        echo $totalPage;
+        ?>)page = <?php
+        echo $totalPage;
+        ?>;window.location.href = "<?php
+        echo $this->getUrlFromPage('"+page+"');
+        ?>";return true;}return false;}
+//-->
+</script>
+<?php
+    }
+    ?>
+<div class="page_links">
+<?php
+    if ($this->beforeHtml) {
+        ?>
+  <span><?php
+        echo $this->beforeHtml;
+        ?>&nbsp;&nbsp;</span>
+<?php
+    }
+    if ($page <= 1) {
+        ?>
+  <font color="#999999" class="topbtn"><?php
+        echo Ddm::getTranslate('core')->translate('上一页');
+        /* « */
+        ?></font>
+<?php
+    } else {
+        ?>
+  <a href="<?php
+        echo $this->getUrlFromPage($page - 1);
+        ?>"><?php
+        echo Ddm::getTranslate('core')->translate('上一页');
+        ?></a>
+<?php
+    }
+    if ($startNum > 1) {
+        ?>
+  <span>…</span>
+<?php
+    }
+    $i = 0;
+    while ($i++ < 10 && $startNum <= $totalPage) {
+        if ($startNum == $page) {
+            ?>
+  <font color="#999999"><strong><?php
+            echo $startNum;
+            ?></strong></font>
+<?php
+        } else {
+            ?>
+  <a href="<?php
+            echo $this->getUrlFromPage($startNum);
+            ?>"><?php
+            echo $startNum;
+            ?></a>
+<?php
+        }
+        $startNum++;
+    }
+    if ($totalPage > 10 && $totalPage > $startNum - 1) {
+        ?>
+  <span>…</span>
+<?php
+    }
+    if ($page >= $totalPage) {
+        ?>
+  <font color="#999999" class="topbtn"><?php
+        echo Ddm::getTranslate('core')->translate('下一页');
+        /* » */
+        ?></font>
+<?php
+    } else {
+        ?>
+  <a href="<?php
+        echo $this->getUrlFromPage($page + 1);
+        ?>"><?php
+        echo Ddm::getTranslate('core')->translate('下一页');
+        ?></a>
+<?php
+    }
+    if ($this->showinput) {
+        ?>
+  <font<?php
+        if ($totalPage > 1) {
+            echo ' style="border: 1px solid #666666;"';
+        }
+        ?>><input id="goto-page" type="text" maxlength="5" class="page_input<?php
+        if ($totalPage == 1) {
+            echo ' disabled';
+        }
+        ?>" value="<?php
+        echo $page;
+        ?>"<?php
+        if ($totalPage == 1) {
+            echo ' disabled="disabled"';
+        }
+        ?> onfocus="this.select();" onkeydown="if(event.keyCode == 13){gotoPage(this.value);return false;}" /></font>
+<?php
+    }
+    ?>
+  <span>&nbsp;&nbsp;<?php
+    echo Ddm::getTranslate('core')->___('%s/%s 页', "<strong>{$page}</strong>", "<strong>{$totalPage}</strong>");
+    ?></span>
+<?php
+    if ($this->afterHtml) {
+        ?>
+  <span><?php
+        echo $this->afterHtml;
+        ?>&nbsp;&nbsp;</span>
+<?php
+    }
+    ?>
+</div>
+<?php
+}

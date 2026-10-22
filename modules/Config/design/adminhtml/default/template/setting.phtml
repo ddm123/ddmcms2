@@ -1,0 +1,73 @@
+<?php
+
+/* @var $this \Config\Block\Adminhtml\Setting */
+$settingFormData = $this->getSettingFormData();
+$sections = $this->getSections();
+$section = $this->getSection();
+?>
+<div class="setting-container">
+    <div class="setting-left-col">
+        <ul>
+<?php
+foreach ($sections as $key => $value) {
+    ?>
+            <li><a href="<?php
+    echo $value['url'];
+    ?>"<?php
+    if ($section == $key) {
+        echo ' class="active"';
+    }
+    ?>><?php
+    echo $value['label'];
+    ?></a></li>
+<?php
+}
+?>
+        </ul>
+    </div>
+    <div class="setting-rigth-col">
+        <div class="form-content-header">
+            <h3><?php
+echo $sections[$section]['label'];
+?></h3>
+        </div>
+        <?php
+echo $this->getBlockHtml('language_switch');
+?>
+        <div class="form-content">
+            <form action="<?php
+echo Ddm::getUrl('*/*/save', ['language' => $this->getLanguageId(), 'section' => $this->getSection()]);
+?>" method="post" id="edit-setting-form">
+            <dl>
+<?php
+foreach ($settingFormData['groups'] as $key => $data) {
+    if (strpos($key, '@')) {
+        continue;
+    }
+    $data['label'] = Ddm::getTranslate(isset($settingFormData['groups']["{$key}@attributes"]['module']) ? $settingFormData['groups']["{$key}@attributes"]['module'] : 'config')->translate($data['label']);
+    ?>
+                <dt><?php
+    echo $data['label'];
+    ?></dt>
+                <dd><?php
+    echo $this->getBlock($key)->toHtml();
+    ?></dd>
+<?php
+}
+?>
+            </dl>
+                <div><button type="submit" class="btn btn-primary"><?php
+echo Ddm::getTranslate('admin')->translate('保存');
+?></button></div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+var settingForm = new validateForm($id("edit-setting-form"),false);
+</script>
+
+
+
+
+
