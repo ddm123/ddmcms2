@@ -22,8 +22,7 @@ class Uploader
 
     protected array $_allowedExtensions = [];
 
-    protected int $_alloweMaxSize = 2097152;
-    //2M
+    protected int $_alloweMaxSize = 2097152; //2M
 
     protected array $_error = [];
 
@@ -45,7 +44,7 @@ class Uploader
     /**
      * @param string|array $FILES
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      */
     public function setFiles(string|array $FILES): static
     {
@@ -69,6 +68,7 @@ class Uploader
 
     /**
      * 保存到哪个文件夹
+     *
      * @param string $path
      * @return $this
      */
@@ -80,6 +80,7 @@ class Uploader
 
     /**
      * 允许上传哪些文件, 不要带".", 多个请使用数组格式
+     *
      * @param array|string $extensions
      * @return $this
      */
@@ -95,6 +96,7 @@ class Uploader
 
     /**
      * 允许上传多大的文件
+     *
      * @param int $maxSize 单位是字节
      * @return $this
      */
@@ -106,6 +108,7 @@ class Uploader
 
     /**
      * 是否分文件夹存放
+     *
      * @param bool $flag
      * @return $this
      */
@@ -129,12 +132,12 @@ class Uploader
 
     /**
      * @param bool $createFolder 是否分文件夹存放
-     * @param mixed $newFilename 不含扩展名
+     * @param string|null $newFilename 不含扩展名
      * @param string $extension
      * @param int $maxSize
-     * @return boolean|string|array 如果是多文件上传则返回一个数组, 如果单个文件返回一个文件路径, 如果查没上传到文件或不合法返回false
+     * @return bool|string|array 如果是多文件上传则返回一个数组, 如果单个文件返回一个文件路径, 如果查没上传到文件或不合法返回false
      */
-    public function save(?bool $createFolder = null, mixed $newFilename = null, ?string $extension = null, ?int $maxSize = null): bool|string|array
+    public function save(?bool $createFolder = null, ?string $newFilename = null, ?string $extension = null, ?int $maxSize = null): bool|string|array
     {
         $result = false;
         if (!$this->_path) {
@@ -174,7 +177,7 @@ class Uploader
         return $fileName;
     }
 
-    protected function _saveFile(mixed $file, mixed $fileName, mixed $newFilename = null, mixed $fileSize = null, mixed $createFolder = null, mixed $extension = null, mixed $maxSize = null): mixed
+    protected function _saveFile(string $file, string $fileName, ?string $newFilename = null, ?int $fileSize = null, ?bool $createFolder = null, array|string|null $extension = null, ?int $maxSize = null): string|false
     {
         $maxSize === null and $maxSize = $this->_alloweMaxSize;
         $fileSize === null and $fileSize = filesize($file);
@@ -196,7 +199,9 @@ class Uploader
         } elseif (is_string($extension)) {
             $extension = array_merge($this->_allowedExtensions, explode(',', $extension));
         }
-        if ($extension && !$this->_checkExtension($extension, $ext = $this->getExtension($fileName))) {
+
+        $ext = $this->getExtension($fileName);
+        if ($extension && !$this->_checkExtension($extension, $ext)) {
             $this->_error[] = "不允许 '.{$ext}' 格式的文件";
             return false;
         }
@@ -214,7 +219,7 @@ class Uploader
     /**
      * @param array $extensions
      * @param string $extension
-     * @return boolean
+     * @return bool
      */
     protected function _checkExtension(array $extensions, string $extension): bool
     {

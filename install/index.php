@@ -7,11 +7,11 @@
  * @author ddm
  * @copyright (c) 2010-2014 DDMCMS http://jinshui8.com/
  */
-if (PHP_VERSION_ID < 80000) {
+if (PHP_VERSION_ID < 80500) {
     echo '<div style="font:12px/1.35em arial, helvetica, sans-serif;">
 <div style="margin:0 0 25px 0; border-bottom:1px solid #ccc;">
 <h3 style="margin:0; font-size:1.7em; font-weight:normal; text-transform:none; text-align:left; color:#2f2f2f;">
-非常遗憾，你当前的PHP版本不能正常使用本系统</h3></div><p>DDMCMS需要运行在PHP 8.0或更高的版本</p></div>';
+非常遗憾，你当前的PHP版本不能正常使用本系统</h3></div><p>DDMCMS需要运行在PHP 8.5或更高的版本</p></div>';
     exit;
 }
 $_SERVER['CMS_INSTALL'] = true;

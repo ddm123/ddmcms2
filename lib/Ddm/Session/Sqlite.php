@@ -21,20 +21,20 @@ class Sqlite implements InterfaceSession
     /** @var int */
     protected int $_gcProbability = 30;
 
-    /** @var PDO */
-    protected mixed $_pdo = null;
+    /** @var \PDO */
+    protected ?\PDO $_pdo = null;
 
-    /** @var PDOStatement */
-    protected mixed $_readStatement = null;
+    /** @var \PDOStatement */
+    protected ?\PDOStatement $_readStatement = null;
 
-    /** @var PDOStatement */
-    protected mixed $_writeStatement = null;
+    /** @var \PDOStatement */
+    protected ?\PDOStatement $_writeStatement = null;
 
-    /** @var PDOStatement */
-    protected mixed $_destroyStatement = null;
+    /** @var \PDOStatement */
+    protected ?\PDOStatement $_destroyStatement = null;
 
-    /** @var PDOStatement */
-    protected mixed $_gcStatement = null;
+    /** @var \PDOStatement */
+    protected ?\PDOStatement $_gcStatement = null;
 
     /**
      * @param string $savePath

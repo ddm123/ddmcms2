@@ -14,11 +14,11 @@ use Ddm;
 class Cache
 {
 
-    protected static mixed $_instance = null;
+    protected static ?Cache $_instance = null;
 
     protected static bool $_registerShutdown = false;
 
-    protected mixed $_cache = null;
+    protected ?Cache\InterfaceCache $_cache = null;
 
     protected array $_isLocked = [];
 
@@ -38,15 +38,17 @@ class Cache
 
     /**
      * 使用单例模式
+     *
      * @return \Ddm\Cache
      */
     public static function singleton(): Cache
     {
-        return self::$_instance === null ? self::$_instance = new Cache() : self::$_instance;
+        return self::$_instance === null ? (self::$_instance = new static()) : self::$_instance;
     }
 
     /**
      * 保存存一条缓存数据
+     *
      * @param string $id
      * @param mixed $data
      * @param array $tags
@@ -60,6 +62,7 @@ class Cache
 
     /**
      * 读出一条缓存数据
+     *
      * @param string $id
      * @return mixed
      */
@@ -70,6 +73,7 @@ class Cache
 
     /**
      * 删除一条缓存数据
+     *
      * @param string $id
      * @return \Ddm\Cache
      */
@@ -80,6 +84,7 @@ class Cache
 
     /**
      * 删除所有缓存数据
+     *
      * @return bool
      */
     public static function clear(): bool
@@ -94,7 +99,7 @@ class Cache
     {
         if ($this->_cache === null) {
             $config = Ddm::getConfig()->getXmlConfig();
-            $cacheClass = !isset($config['cache']['driver']) || $config['cache']['driver'] == '' ? '\Ddm\Cache\File' : $config['cache']['driver'];
+            $cacheClass = !isset($config['cache']['driver']) || $config['cache']['driver'] == '' ? Cache\File::class : $config['cache']['driver'];
             $this->_cache = new $cacheClass(isset($config['cache']) ? $config['cache'] : []);
             $this->_prefix = isset($config['cache']['prefix']) ? $config['cache']['prefix'] : '';
         }

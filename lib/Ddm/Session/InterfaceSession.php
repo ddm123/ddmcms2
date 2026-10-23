@@ -29,7 +29,7 @@ interface InterfaceSession
     public function destroy(string $sessionId): bool;
 
     /**
-     * @param string $maxlifetime
+     * @param int $maxlifetime
      * @return bool
      */
     public function gc(int $maxlifetime): bool;

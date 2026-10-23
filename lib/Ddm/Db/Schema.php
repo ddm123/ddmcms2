@@ -13,13 +13,13 @@ class Schema
 {
 
     /** @var \Ddm\Db\InterfaceDb */
-    protected mixed $_connection;
+    protected InterfaceDb $_connection;
 
     /** @var string */
-    protected mixed $_tablePrefix;
+    protected string $_tablePrefix = '';
 
     /** @var \Ddm\Db\Schema\Grammar */
-    protected mixed $_grammar;
+    protected Schema\Grammar $_grammar;
 
     /**
      * @param \Ddm\Db\InterfaceDb $connection
@@ -36,9 +36,10 @@ class Schema
 
     /**
      * 创建数据表
+     *
      * @param string $table
      * @param callable(\Ddm\Db\Schema\Table $table): void $callback
-     * @return PDOStatement|false
+     * @return \PDOStatement|false
      */
     public function create(string $table, callable $callback): \PDOStatement|false
     {
@@ -54,9 +55,10 @@ class Schema
 
     /**
      * 创建数据表；表已存在时不执行操作
+     *
      * @param string $table
      * @param callable(\Ddm\Db\Schema\Table $table): void $callback
-     * @return PDOStatement|false
+     * @return \PDOStatement|false
      */
     public function createIfNotExists(string $table, callable $callback): \PDOStatement|false
     {
@@ -71,8 +73,9 @@ class Schema
 
     /**
      * 删除数据表
+     *
      * @param string $table
-     * @return PDOStatement|false
+     * @return \PDOStatement|false
      */
     public function drop(string $table): \PDOStatement|false
     {
@@ -81,8 +84,9 @@ class Schema
 
     /**
      * 删除数据表；表不存在时不报错
+     *
      * @param string $table
-     * @return PDOStatement|false
+     * @return \PDOStatement|false
      */
     public function dropIfExists(string $table): \PDOStatement|false
     {
@@ -91,9 +95,10 @@ class Schema
 
     /**
      * 重命名数据表
+     *
      * @param string $from
      * @param string $to
-     * @return PDOStatement|false
+     * @return \PDOStatement|false
      */
     public function rename(string $from, string $to): \PDOStatement|false
     {
@@ -102,6 +107,7 @@ class Schema
 
     /**
      * 判断数据表是否存在
+     *
      * @param string $table
      * @return bool
      */
@@ -114,6 +120,7 @@ class Schema
 
     /**
      * 判断数据表是否包含指定字段
+     *
      * @param string $table
      * @param string|array $columns
      * @return bool
@@ -131,6 +138,7 @@ class Schema
 
     /**
      * 判断数据表是否包含所有指定字段
+     *
      * @param string $table
      * @param string[] $columns
      * @return bool
@@ -142,10 +150,11 @@ class Schema
 
     /**
      * 获取数据表字段列表
+     *
      * @param string $table
      * @return string[]
      */
-    public function getColumnListing(string $table): string
+    public function getColumnListing(string $table): array
     {
         $statement = $this->_grammar->compileColumnListing($this->_getTableName($table));
         $result = $this->_connection->query($statement['sql'], $statement['params']);
@@ -158,9 +167,10 @@ class Schema
 
     /**
      * 获取当前数据库的数据表名称
+     *
      * @return string[]
      */
-    public function getTableListing(): string
+    public function getTableListing(): array
     {
         $statement = $this->_grammar->compileTableListing();
         $result = $this->_connection->query($statement['sql'], $statement['params']);
@@ -173,6 +183,7 @@ class Schema
 
     /**
      * 删除当前数据库中的所有数据表
+     *
      * @return void
      */
     public function dropAllTables(): void
@@ -189,9 +200,10 @@ class Schema
 
     /**
      * 修改数据表
+     *
      * @param string $table
      * @param callable(\Ddm\Db\Schema\Table $table): void $callback
-     * @return PDOStatement|false
+     * @return \PDOStatement|false
      */
     public function table(string $table, callable $callback): \PDOStatement|false
     {
@@ -206,7 +218,8 @@ class Schema
 
     /**
      * 禁用外键约束检查
-     * @return PDOStatement|false
+     *
+     * @return \PDOStatement|false
      */
     public function disableForeignKeyConstraints(): \PDOStatement|false
     {
@@ -215,7 +228,8 @@ class Schema
 
     /**
      * 启用外键约束检查
-     * @return PDOStatement|false
+     *
+     * @return \PDOStatement|false
      */
     public function enableForeignKeyConstraints(): \PDOStatement|false
     {
@@ -224,6 +238,7 @@ class Schema
 
     /**
      * 在回调执行期间禁用外键约束，并在结束后恢复
+     *
      * @param callable $callback
      * @return mixed
      */
@@ -254,7 +269,7 @@ class Schema
 
     /**
      * @param string[] $statements
-     * @return PDOStatement|false
+     * @return \PDOStatement|false
      */
     protected function _runStatements(array $statements): \PDOStatement|false
     {

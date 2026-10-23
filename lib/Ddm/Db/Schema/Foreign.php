@@ -13,22 +13,22 @@ class Foreign
 {
 
     /** @var string[] */
-    protected mixed $_columns;
+    protected array $_columns = [];
 
     /** @var string|null */
-    protected mixed $_name;
+    protected ?string $_name = null;
 
     /** @var string[] */
     protected array $_references = [];
 
     /** @var string|null */
-    protected mixed $_onTable;
+    protected ?string $_onTable = null;
 
     /** @var string|null */
-    protected mixed $_onDelete;
+    protected ?string $_onDelete = null;
 
     /** @var string|null */
-    protected mixed $_onUpdate;
+    protected ?string $_onUpdate = null;
 
     /**
      * @param string[] $columns
@@ -84,7 +84,7 @@ class Foreign
     /**
      * @return string[]
      */
-    public function getColumns(): string
+    public function getColumns(): array
     {
         return $this->_columns;
     }
@@ -100,7 +100,7 @@ class Foreign
     /**
      * @return string[]
      */
-    public function getReferences(): string
+    public function getReferences(): array
     {
         return $this->_references;
     }

@@ -107,7 +107,6 @@ class Notice
     }
 
     /**
-     * @param string $str
      * @return $this
      */
     public function save(): static

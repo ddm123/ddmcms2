@@ -2,9 +2,9 @@
 
 namespace Ddm\Db\PDO;
 
-use Ddm;
 use Ddm\Db\Expression;
 use Ddm\Db\InterfaceDb;
+use Ddm\Log;
 
 class Mysql implements InterfaceDb
 {
@@ -30,7 +30,11 @@ class Mysql implements InterfaceDb
         if (isset($config['character']) && $config['character'] !== '') {
             $dsn .= ';charset=' . $config['character'];
         }
-        $this->_pdo = new \PDO($dsn, $config['username'], $config['password'], [\PDO::ATTR_PERSISTENT => !empty($config['use_pconnect']), \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION, \PDO::ATTR_EMULATE_PREPARES => true]);
+        $this->_pdo = new \PDO($dsn, $config['username'], $config['password'], [
+            \PDO::ATTR_PERSISTENT => !empty($config['use_pconnect']),
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_EMULATE_PREPARES => true
+        ]);
     }
 
     /**
@@ -323,26 +327,6 @@ class Mysql implements InterfaceDb
      */
     protected function _errorLog(string $log): void
     {
-        if (defined('SITE_ROOT')) {
-            $f = SITE_ROOT . '/data/errors/mysql/mysql-errors.txt';
-            $logstring = date('Y-m-d H:i:s') . "\r\n-----------------------------------";
-            $logstring .= "\r\nURL: " . $_SERVER['REQUEST_URI'] . "\r\nIP: " . $_SERVER['REMOTE_ADDR'] . "\r\nUSER_AGENT: " . (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'None') . "\r\nMETHOD: " . $_SERVER['REQUEST_METHOD'];
-            if (!empty($_POST)) {
-                $logstring .= "\r\nPOST_DATA: " . print_r($_POST, true);
-            }
-            if (empty($_SERVER['QUERY_STRING']) && !empty($_GET)) {
-                $logstring .= "\r\nGET_DATA: " . print_r($_GET, true);
-            }
-            $logstring .= "\r\n{$log}";
-            if (is_file($f)) {
-                if (filesize($f) > 4194304) {
-                    rename($f, SITE_ROOT . '/data/errors/mysql/mysql-errors-' . date('YmdHis') . '.txt');
-                } else {
-                    Ddm::getHelper('core')->saveFile($f, "\r\n" . $logstring, FILE_APPEND);
-                    return;
-                }
-            }
-            Ddm::getHelper('core')->saveFile($f, $logstring);
-        }
+        Log::saveTo('mysql/error.log', $log.PHP_EOL.'URL: '.Log::getCurrentUrl(true));
     }
 }

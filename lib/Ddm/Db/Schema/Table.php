@@ -13,7 +13,7 @@ class Table
 {
 
     /** @var \Ddm\Db\Schema\Grammar */
-    protected mixed $_grammar;
+    protected Grammar $_grammar;
 
     /** @var \Ddm\Db\Schema\Column[] */
     protected array $_columns = [];
@@ -34,7 +34,7 @@ class Table
     protected array $_options = [];
 
     /** @var string */
-    protected mixed $_tablePrefix;
+    protected string $_tablePrefix = '';
 
     /**
      * @param \Ddm\Db\Schema\Grammar $grammar
@@ -50,73 +50,79 @@ class Table
     /**
      * @param string $name
      * @param string|null $indexName
-     * @return void
+     * @return $this
      */
-    public function morphs(string $name, ?string $indexName = null): void
+    public function morphs(string $name, ?string $indexName = null): static
     {
         $this->string($name . '_type');
         $this->foreignId($name . '_id');
         $this->index([$name . '_type', $name . '_id'], $indexName);
+        return $this;
     }
 
     /**
      * @param string $name
      * @param string|null $indexName
-     * @return void
+     * @return $this
      */
-    public function nullableMorphs(string $name, ?string $indexName = null): void
+    public function nullableMorphs(string $name, ?string $indexName = null): static
     {
         $this->string($name . '_type')->nullable();
         $this->foreignId($name . '_id')->nullable();
         $this->index([$name . '_type', $name . '_id'], $indexName);
+        return $this;
     }
 
     /**
      * @param string $name
      * @param string|null $indexName
-     * @return void
+     * @return $this
      */
-    public function uuidMorphs(string $name, ?string $indexName = null): void
+    public function uuidMorphs(string $name, ?string $indexName = null): static
     {
         $this->string($name . '_type');
         $this->uuid($name . '_id');
         $this->index([$name . '_type', $name . '_id'], $indexName);
+        return $this;
     }
 
     /**
      * @param string $name
      * @param string|null $indexName
-     * @return void
+     * @return $this
      */
-    public function nullableUuidMorphs(string $name, ?string $indexName = null): void
+    public function nullableUuidMorphs(string $name, ?string $indexName = null): static
     {
         $this->string($name . '_type')->nullable();
         $this->uuid($name . '_id')->nullable();
         $this->index([$name . '_type', $name . '_id'], $indexName);
+        return $this;
     }
 
     /**
      * @param string $name
      * @param string|null $indexName
-     * @return void
+     * @return $this
      */
-    public function ulidMorphs(string $name, ?string $indexName = null): void
+    public function ulidMorphs(string $name, ?string $indexName = null): static
     {
         $this->string($name . '_type');
         $this->ulid($name . '_id');
         $this->index([$name . '_type', $name . '_id'], $indexName);
+        return $this;
     }
 
     /**
      * @param string $name
      * @param string|null $indexName
-     * @return void
+     * @return $this
      */
-    public function nullableUlidMorphs(string $name, ?string $indexName = null): void
+    public function nullableUlidMorphs(string $name, ?string $indexName = null): static
     {
         $this->string($name . '_type')->nullable();
         $this->ulid($name . '_id')->nullable();
         $this->index([$name . '_type', $name . '_id'], $indexName);
+        return $this;
     }
 
     /**
@@ -569,37 +575,39 @@ class Table
 
     /**
      * 添加Laravel风格的created_at和updated_at字段
-     * @return void
+     * @return $this
      */
-    public function timestamps(): void
+    public function timestamps(): static
     {
         $this->timestamp('created_at')->nullable();
         $this->timestamp('updated_at')->nullable();
+        return $this;
     }
 
     /**
-     * @return void
+     * @return $this
      */
-    public function timestampsTz(): void
+    public function timestampsTz(): static
     {
         $this->timestampTz('created_at')->nullable();
         $this->timestampTz('updated_at')->nullable();
+        return $this;
     }
 
     /**
-     * @return void
+     * @return $this
      */
-    public function nullableTimestamps(): void
+    public function nullableTimestamps(): static
     {
-        $this->timestamps();
+        return $this->timestamps();
     }
 
     /**
-     * @return void
+     * @return $this
      */
-    public function nullableTimestampsTz(): void
+    public function nullableTimestampsTz(): static
     {
-        $this->timestampsTz();
+        return $this->timestampsTz();
     }
 
     /**
@@ -619,7 +627,12 @@ class Table
      */
     public function unique(string|array $columns, ?string $name = null): static
     {
-        $this->_indexes[] = ['columns' => (array) $columns, 'unique' => true, 'name' => $name, 'type' => 'unique'];
+        $this->_indexes[] = [
+            'columns' => (array) $columns,
+            'unique' => true,
+            'name' => $name,
+            'type' => 'unique'
+        ];
         return $this;
     }
 
@@ -630,7 +643,12 @@ class Table
      */
     public function index(string|array $columns, ?string $name = null): static
     {
-        $this->_indexes[] = ['columns' => (array) $columns, 'unique' => false, 'name' => $name, 'type' => 'index'];
+        $this->_indexes[] = [
+            'columns' => (array) $columns,
+            'unique' => false,
+            'name' => $name,
+            'type' => 'index'
+        ];
         return $this;
     }
 
@@ -641,7 +659,12 @@ class Table
      */
     public function fullText(string|array $columns, ?string $name = null): static
     {
-        $this->_indexes[] = ['columns' => (array) $columns, 'unique' => false, 'name' => $name, 'type' => 'fulltext'];
+        $this->_indexes[] = [
+            'columns' => (array) $columns,
+            'unique' => false,
+            'name' => $name, 
+            'type' => 'fulltext'
+        ];
         return $this;
     }
 
@@ -652,7 +675,11 @@ class Table
      */
     public function spatialIndex(string|array $columns, ?string $name = null): static
     {
-        $this->_indexes[] = ['columns' => (array) $columns, 'unique' => false, 'name' => $name, 'type' => 'spatial'];
+        $this->_indexes[] = [
+            'columns' => (array) $columns,
+            'unique' => false,
+            'name' => $name, 'type' => 'spatial'
+        ];
         return $this;
     }
 
@@ -795,7 +822,12 @@ class Table
      */
     public function dropUnique(string|array $columns, ?string $name = null): static
     {
-        $this->_commands[] = ['name' => 'dropUnique', 'columns' => $name === null && is_string($columns) ? [] : (array) $columns, 'index' => $name === null && is_string($columns) ? $columns : $name, 'indexType' => 'unique'];
+        $this->_commands[] = [
+            'name' => 'dropUnique',
+            'columns' => $name === null && is_string($columns) ? [] : (array) $columns,
+            'index' => $name === null && is_string($columns) ? $columns : $name,
+            'indexType' => 'unique'
+        ];
         return $this;
     }
 
@@ -806,7 +838,12 @@ class Table
      */
     public function dropIndex(string|array $columns, ?string $name = null): static
     {
-        $this->_commands[] = ['name' => 'dropIndex', 'columns' => $name === null && is_string($columns) ? [] : (array) $columns, 'index' => $name === null && is_string($columns) ? $columns : $name, 'indexType' => 'index'];
+        $this->_commands[] = [
+            'name' => 'dropIndex',
+            'columns' => $name === null && is_string($columns) ? [] : (array) $columns,
+            'index' => $name === null && is_string($columns) ? $columns : $name,
+            'indexType' => 'index'
+        ];
         return $this;
     }
 
@@ -817,7 +854,12 @@ class Table
      */
     public function dropFullText(string|array $columns, ?string $name = null): static
     {
-        $this->_commands[] = ['name' => 'dropIndex', 'columns' => $name === null && is_string($columns) ? [] : (array) $columns, 'index' => $name === null && is_string($columns) ? $columns : $name, 'indexType' => 'fulltext'];
+        $this->_commands[] = [
+            'name' => 'dropIndex',
+            'columns' => $name === null && is_string($columns) ? [] : (array) $columns,
+            'index' => $name === null && is_string($columns) ? $columns : $name,
+            'indexType' => 'fulltext'
+        ];
         return $this;
     }
 
@@ -828,7 +870,12 @@ class Table
      */
     public function dropSpatialIndex(string|array $columns, ?string $name = null): static
     {
-        $this->_commands[] = ['name' => 'dropIndex', 'columns' => $name === null && is_string($columns) ? [] : (array) $columns, 'index' => $name === null && is_string($columns) ? $columns : $name, 'indexType' => 'spatial'];
+        $this->_commands[] = [
+            'name' => 'dropIndex',
+            'columns' => $name === null && is_string($columns) ? [] : (array) $columns,
+            'index' => $name === null && is_string($columns) ? $columns : $name,
+            'indexType' => 'spatial'
+        ];
         return $this;
     }
 
@@ -839,7 +886,12 @@ class Table
      */
     public function dropForeign(string|array $columns, ?string $name = null): static
     {
-        $this->_commands[] = ['name' => 'dropForeign', 'columns' => $name === null && is_string($columns) ? [] : (array) $columns, 'index' => $name === null && is_string($columns) ? $columns : $name, 'indexType' => 'foreign'];
+        $this->_commands[] = [
+            'name' => 'dropForeign',
+            'columns' => $name === null && is_string($columns) ? [] : (array) $columns,
+            'index' => $name === null && is_string($columns) ? $columns : $name,
+            'indexType' => 'foreign'
+        ];
         return $this;
     }
 
@@ -889,7 +941,7 @@ class Table
     /**
      * @return \Ddm\Db\Schema\Column[]
      */
-    public function getColumns(): Column
+    public function getColumns(): array
     {
         return $this->_columns;
     }
@@ -897,7 +949,7 @@ class Table
     /**
      * @return \Ddm\Db\Schema\Foreign[]
      */
-    public function getForeignKeys(): Foreign
+    public function getForeignKeys(): array
     {
         return $this->_foreignKeys;
     }
@@ -949,7 +1001,12 @@ class Table
         $indexes = $this->_indexes;
         foreach ($this->_columns as $column) {
             if ($column->isUnique() || $column->hasIndex()) {
-                $indexes[] = ['columns' => [$column->getName()], 'unique' => $column->isUnique(), 'name' => null, 'type' => $column->isUnique() ? 'unique' : 'index'];
+                $indexes[] = [
+                    'columns' => [$column->getName()],
+                    'unique' => $column->isUnique(),
+                    'name' => null,
+                    'type' => $column->isUnique() ? 'unique' : 'index'
+                ];
             }
         }
         foreach ($indexes as &$index) {

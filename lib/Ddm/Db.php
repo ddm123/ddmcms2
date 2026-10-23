@@ -22,13 +22,13 @@ class Db
     private static array $_connections = [];
 
     /** @var array|null */
-    private static mixed $_databaseConfig = null;
+    private static ?array $_databaseConfig = null;
 
     /** @var int */
     private static int $_beginTransaction = 0;
 
     /** @var string|null 'read' or 'write' */
-    private static mixed $lockReadWiteType = null;
+    private static ?string $lockReadWiteType = null;
 
     /** @var string[] */
     private static array $lockReadWiteTypes = [];
@@ -40,6 +40,7 @@ class Db
 
     /**
      * 解除锁定读/写库
+     *
      * @return void
      */
     public static function unLockReadWite(): void
@@ -49,6 +50,7 @@ class Db
 
     /**
      * 锁定读库
+     *
      * @return void
      */
     public static function lockReadConn(): void
@@ -58,6 +60,7 @@ class Db
 
     /**
      * 锁定写库
+     *
      * @return void
      */
     public static function lockWriteConn(): void
@@ -67,6 +70,7 @@ class Db
 
     /**
      * 锁定读/写库
+     *
      * @param string $type
      * @return void
      */
@@ -94,6 +98,7 @@ class Db
 
     /**
      * Connect to the database
+     *
      * @param string $name 连接哪个数据库
      * @return \Ddm\Db\InterfaceDb
      */
@@ -141,6 +146,7 @@ class Db
 
     /**
      * Get table name
+     *
      * @param string $table
      * @return string
      */
@@ -152,6 +158,7 @@ class Db
 
     /**
      * 获取数据库结构管理器
+     *
      * @return \Ddm\Db\Schema
      */
     public static function schema(): Db\Schema
@@ -171,6 +178,7 @@ class Db
 
     /**
      * 获取一个查询构造器实例, 用于查询、修改、删除等操作
+     *
      * @param string|array $name 表名, 也支持 [别名 => 表名] 或 "表名 as 别名"
      * @param bool $isPrefixIncluded 表名是否已包含前缀
      * @return \Ddm\Db\Builder
@@ -248,6 +256,6 @@ class Db
      */
     protected static function _getDatabaseConfig(): array
     {
-        return self::$_databaseConfig === null ? self::$_databaseConfig = Ddm::getConfig()->getDbConfig() : self::$_databaseConfig;
+        return self::$_databaseConfig === null ? (self::$_databaseConfig = Ddm::getConfig()->getDbConfig()) : self::$_databaseConfig;
     }
 }

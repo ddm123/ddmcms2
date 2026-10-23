@@ -17,37 +17,37 @@ class Controller
 
     protected static mixed $_instance = null;
 
-    protected mixed $_rootPath = null;
+    protected ?string $_rootPath = null;
 
-    protected mixed $_currentBaseUrl = null;
+    protected ?string $_currentBaseUrl = null;
 
-    protected mixed $_moduleName = null;
+    protected ?string $_moduleName = null;
 
-    protected mixed $_controllerName = null;
+    protected ?string $_controllerName = null;
 
-    protected mixed $_actionName = null;
+    protected ?string $_actionName = null;
 
-    private mixed $_currentUrl = null;
+    private ?string $_currentUrl = null;
 
-    private mixed $_parseUriResult = null;
+    private ?bool $_parseUriResult = null;
 
-    private mixed $_urlAlias = null;
+    private ?string $_urlAlias = null;
 
     private bool $_isHomePage = true;
 
-    private mixed $_setIsHomePage = null;
+    private ?bool $_setIsHomePage = null;
 
-    private mixed $_canRunModule = null;
+    private ?bool $_canRunModule = null;
 
-    private mixed $_uriPath = null;
+    private ?string $_uriPath = null;
 
-    private mixed $_selfPath = null;
+    private ?string $_selfPath = null;
 
-    private mixed $_404PageHtml = null;
+    private ?string $_404PageHtml = null;
 
-    private mixed $_403PageHtml = null;
+    private ?string $_403PageHtml = null;
 
-    private mixed $_checkAccessResult = null;
+    private ?bool $_checkAccessResult = null;
 
     private function __construct()
     {
@@ -56,11 +56,12 @@ class Controller
 
     /**
      * 使用单例模式
+     *
      * @return \Ddm\Controller
      */
     public static function singleton(): Controller
     {
-        return self::$_instance === null ? self::$_instance = new Controller() : self::$_instance;
+        return self::$_instance === null ? self::$_instance = new static() : self::$_instance;
     }
 
     /**
@@ -324,9 +325,9 @@ class Controller
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUrlAlias(): string
+    public function getUrlAlias(): ?string
     {
         return $this->_urlAlias;
     }
@@ -355,8 +356,7 @@ class Controller
     }
 
     /**
-     * 返回解析当前访问的URL结果
-     * @return bool
+     * 是否可以解析当前访问的URL结果
      */
     public function parseUri(): bool
     {
@@ -403,7 +403,6 @@ class Controller
 
     /**
      * 获取当前浏览器地址栏上显示的域名,末尾包含斜杠
-     * @return string
      */
     public function getCurrentBaseUrl(): string
     {
@@ -436,7 +435,6 @@ class Controller
 
     /**
      * 当前访问的是否网站首页
-     * @return boolean
      */
     public function isHomePage(): bool
     {
@@ -444,7 +442,7 @@ class Controller
     }
 
     /**
-     * @param boolean $flag
+     * @param bool $flag
      * @return $this
      */
     public function setHomePage(bool $flag): static
@@ -454,7 +452,7 @@ class Controller
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function runModule(): bool
     {
@@ -511,8 +509,9 @@ class Controller
             }
         } catch (\Exception $exception) {
             Ddm::dispatchEvent('catch_controller_error_exception', ['controller' => $this, 'exception' => $exception]);
-            $exceptionLog = $exception->getMessage() . "\r\n" . $exception->getTraceAsString();
-            Ddm::getHelper('core')->saveFile(SITE_ROOT . '/data/errors/exception/exception-log-' . date('Y-m') . '.txt', date('c') . "\r\n{$exceptionLog}\r\n[{$_SERVER['REQUEST_METHOD']}] {$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}\r\n\r\n", FILE_APPEND);
+            $exceptionLog = $exception->getMessage() . PHP_EOL . $exception->getTraceAsString();
+            \Ddm\Log::saveTo('exception.log', $exceptionLog . PHP_EOL . 'URL: ' . \Ddm\Log::getCurrentUrl(true));
+
             if (Ddm::$enableDebug) {
                 echo "<pre>{$exceptionLog}</pre>";
             }

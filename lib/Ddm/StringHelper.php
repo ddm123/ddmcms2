@@ -14,7 +14,7 @@ use Ddm;
 class StringHelper
 {
 
-    protected static mixed $_instance = null;
+    protected static ?StringHelper $_instance = null;
 
     public function __construct()
     {
@@ -23,11 +23,12 @@ class StringHelper
 
     /**
      * 使用单例模式
+     *
      * @return \Ddm\StringHelper
      */
     public static function singleton(): StringHelper
     {
-        return self::$_instance === null ? self::$_instance = new StringHelper() : self::$_instance;
+        return self::$_instance === null ? (self::$_instance = new static()) : self::$_instance;
     }
 
     /**
@@ -44,14 +45,14 @@ class StringHelper
             foreach ($data as $item) {
                 $result[] = $this->escapeHtml($item);
             }
-        } elseif ($data) {
+        } else if ($data) {
             if (!empty($allowedTags)) {
                 $allowed = implode('|', $allowedTags);
-                $result = preg_replace('/<([\/\s\r\n]*)(' . $allowed . ')([\/\s\r\n]*)>/si', '##$1$2$3##', $data);
+                $result = preg_replace('/<([\/\s\r\n]*)(' . $allowed . ')([\/\s\r\n]*)>/si', '##$1$2$3##', (string)$data);
                 $result = htmlspecialchars($result, ENT_COMPAT, 'UTF-8', true);
                 $result = preg_replace('/##([\/\s\r\n]*)(' . $allowed . ')([\/\s\r\n]*)##/si', '<$1$2$3>', $result);
             } else {
-                $result = htmlspecialchars($data, ENT_COMPAT, 'UTF-8', true);
+                $result = htmlspecialchars((string)$data, ENT_COMPAT, 'UTF-8', true);
             }
         } else {
             $result = $data;
@@ -61,7 +62,7 @@ class StringHelper
 
     /**
      * @param string $text
-     * @param string $escapeHtml
+     * @param bool $escapeHtml
      * @param array $allowedTags
      * @return string
      */
@@ -76,7 +77,7 @@ class StringHelper
     public function escapePhpTag(mixed $html): mixed
     {
         if ($html) {
-            $html = preg_replace(['/<([\?\%])/', '/([\?\%])>/'], ['&lt;\1', '\1&gt;'], $html);
+            $html = preg_replace(['/<([\?\%])/', '/([\?\%])>/'], ['&lt;\1', '\1&gt;'], (string)$html);
         }
         return $html;
     }
@@ -132,6 +133,7 @@ class StringHelper
 
     /**
      * 截取一段指定字符数的字符, 该方法优先考虑长度对齐问题, 所以返回字符数可能会和指定的字符数不相等
+     *
      * @param string $str
      * @param int $length
      * @param string $etc
@@ -195,6 +197,7 @@ class StringHelper
 
     /**
      * 截取一段指定字符数的HTML, 该方法不破坏HTML代码, 不将HTML代码计算到字符数中
+     *
      * @param string $html
      * @param int $length
      * @param string $etc
@@ -231,6 +234,7 @@ class StringHelper
 
     /**
      * 获取实际应该截取的字符数, 如果返回-1表示不需要截取
+     *
      * @param string $html
      * @param int $length
      * @return int

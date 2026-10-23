@@ -22,7 +22,7 @@ class JoinClause
     protected string $_table = '';
 
     /** @var string|null */
-    protected mixed $_tableAlias = null;
+    protected ?string $_tableAlias = null;
 
     /** @var array<int, array> */
     protected array $_conditions = [];
@@ -43,7 +43,7 @@ class JoinClause
     }
 
     /**
-     * @param string|Closure $first
+     * @param string|\Closure $first
      * @param string|null $operator
      * @param string|null $second
      * @param string $boolean
@@ -62,7 +62,7 @@ class JoinClause
     }
 
     /**
-     * @param string|Closure $first
+     * @param string|\Closure $first
      * @param string|null $operator
      * @param string|null $second
      * @return \Ddm\Db\JoinClause
@@ -80,7 +80,7 @@ class JoinClause
     }
 
     /**
-     * @param string|Closure $column
+     * @param string|\Closure $column
      * @param string|null $operator
      * @param mixed $value
      * @param string $boolean
@@ -99,7 +99,7 @@ class JoinClause
     }
 
     /**
-     * @param string|Closure $column
+     * @param string|\Closure $column
      * @param string|null $operator
      * @param mixed $value
      * @return \Ddm\Db\JoinClause
@@ -158,18 +158,24 @@ class JoinClause
      */
     protected function _add(string $type, ?string $first, ?string $operator, ?string $second, string $boolean): static
     {
-        $this->_conditions[] = ['type' => $type, 'first' => $first, 'operator' => $operator, 'second' => $second, 'boolean' => $boolean];
+        $this->_conditions[] = [
+            'type' => $type,
+            'first' => $first,
+            'operator' => $operator,
+            'second' => $second,
+            'boolean' => $boolean
+        ];
         return $this;
     }
 
     /**
-     * @param Closure $callback
+     * @param \Closure $callback
      * @param string $boolean
      * @return $this
      */
     protected function _nested(\Closure $callback, string $boolean): static
     {
-        $join = new self($this->_table, $this->_type, $this->_tableAlias);
+        $join = new static($this->_table, $this->_type, $this->_tableAlias);
         $callback($join);
         $this->_conditions[] = ['type' => 'nested', 'join' => $join, 'boolean' => $boolean];
         return $this;

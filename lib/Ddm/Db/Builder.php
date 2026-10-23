@@ -2,6 +2,7 @@
 
 namespace Ddm\Db;
 
+use Stringable;
 use Ddm\Db;
 
 /**
@@ -21,7 +22,7 @@ class Builder
     protected string $_table = '';
 
     /** @var string|null 表别名 */
-    protected mixed $_tableAlias = null;
+    protected ?string $_tableAlias = null;
 
     /** @var array 查询的字段列表(空数组表示*) */
     protected array $_columns = [];
@@ -42,10 +43,10 @@ class Builder
     protected array $_havings = [];
 
     /** @var int|null 限制返回的行数 */
-    protected mixed $_limit = null;
+    protected ?int $_limit = null;
 
     /** @var int|null 偏移量 */
-    protected mixed $_offset = null;
+    protected ?int $_offset = null;
 
     /**
      * @param string $table 已带表前缀的表名
@@ -77,27 +78,42 @@ class Builder
      * @param string|array $columns
      * @return $this
      */
-    public function select(string|array $columns = []): static
+    public function select(...$columns): static
     {
-        $this->_columns = is_array($columns) ? $columns : func_get_args();
+        $this->_columns = [];
+        foreach ($columns as $column) {
+            if (is_array($column)) {
+                $this->_columns = array_merge($this->_columns, $column);
+            } else {
+                $this->_columns[] = $column;
+            }
+        }
         return $this;
     }
 
     /**
      * 追加查询字段(而不是覆盖)
+     *
      * @param string|array $columns
      * @return $this
      */
-    public function addSelect(string|array $columns = []): static
+    public function addSelect(...$columns): static
     {
-        $this->_columns = array_merge($this->_columns, is_array($columns) ? $columns : func_get_args());
+        foreach ($columns as $column) {
+            if (is_array($column)) {
+                $this->_columns = array_merge($this->_columns, $column);
+            } else {
+                $this->_columns[] = $column;
+            }
+        }
         return $this;
     }
 
     /**
      * 查询多行
+     *
      * @param string|array $columns
-     * @param string|Closure|null $indexBy
+     * @param string|\Closure|null $indexBy
      * @return array
      */
     public function get(string|array $columns = [], string|\Closure|null $indexBy = null): array
@@ -126,6 +142,7 @@ class Builder
 
     /**
      * 查询一行
+     *
      * @param string|array $columns
      * @return array|null
      */
@@ -137,6 +154,7 @@ class Builder
 
     /**
      * 通过主键查询一行
+     *
      * @param mixed $id
      * @param string $column
      * @return array|null
@@ -148,15 +166,15 @@ class Builder
 
     /**
      * 获取某一列的值列表
+     *
      * @param string $column
      * @param string|null $key
      * @return array
      */
     public function pluck(string $column, ?string $key = null): array
     {
-        $columns = $key === null ? ['v' => $column] : ['v' => $column, 'k' => $key];
+        $this->_columns = $key === null ? ['v' => $column] : ['v' => $column, 'k' => $key];
         $bindings = [];
-        $this->select($columns);
         $sql = $this->_compileSelect($bindings);
         $stmt = $this->_read($sql, $bindings, \PDO::FETCH_NUM);
         $result = [];
@@ -174,13 +192,15 @@ class Builder
 
     /**
      * 获取单个值
+     *
      * @param string $column
      * @return string|null|false 如果没有查询到任何记录则返回false
      */
     public function value(string $column): string|null|false
     {
         $bindings = [];
-        $this->select(['v' => $column])->limit(1, 0);
+        $this->_columns = ['v' => $column];
+        $this->limit(1, 0);
         $sql = $this->_compileSelect($bindings);
         $stmt = $this->_read($sql, $bindings, \PDO::FETCH_NUM);
         $row = $stmt->fetch(\PDO::FETCH_NUM);
@@ -189,6 +209,7 @@ class Builder
 
     /**
      * 获取当前SELECT语句
+     *
      * @return string
      */
     public function toSql(array &$bindings = []): string
@@ -199,6 +220,7 @@ class Builder
 
     /**
      * 统计行数
+     *
      * @param string $columns
      * @return int
      */
@@ -219,6 +241,7 @@ class Builder
 
     /**
      * 是否存在记录
+     *
      * @return bool
      */
     public function exists(): bool
@@ -229,7 +252,7 @@ class Builder
     }
 
     /**
-     * @param string|Expression|Closure $column
+     * @param string|Expression|\Closure $column
      * @param string|null $operator
      * @param mixed $value
      * @param string $boolean
@@ -256,7 +279,7 @@ class Builder
     }
 
     /**
-     * @param string|Expression|Closure $column
+     * @param string|Expression|\Closure $column
      * @param string|null $operator
      * @param mixed $value
      * @return \Ddm\Db\Builder
@@ -447,7 +470,7 @@ class Builder
 
     /**
      * @param string $table
-     * @param string|Closure $first
+     * @param string|\Closure $first
      * @param string|null $operator
      * @param string|null $second
      * @param string $type
@@ -460,7 +483,7 @@ class Builder
 
     /**
      * @param string $table
-     * @param string|Closure $first
+     * @param string|\Closure $first
      * @param string|null $operator
      * @param string|null $second
      * @return \Ddm\Db\Builder
@@ -472,7 +495,7 @@ class Builder
 
     /**
      * @param string $table
-     * @param string|Closure $first
+     * @param string|\Closure $first
      * @param string|null $operator
      * @param string|null $second
      * @return \Ddm\Db\Builder
@@ -484,6 +507,7 @@ class Builder
 
     /**
      * 新增一条记录
+     *
      * @param array $values
      * @return int
      */
@@ -494,6 +518,7 @@ class Builder
 
     /**
      * 新增一条记录并返回自增ID
+     *
      * @param array $values
      * @return int|null
      */
@@ -506,6 +531,7 @@ class Builder
 
     /**
      * 修改记录
+     *
      * @param array $values
      * @return int 受影响的行数
      */
@@ -531,6 +557,7 @@ class Builder
 
     /**
      * 删除记录
+     *
      * @param mixed $id 传ID则按主键id删除
      * @return int 受影响的行数
      */
@@ -547,6 +574,7 @@ class Builder
 
     /**
      * 字段自增
+     *
      * @param string $column
      * @param int|float $amount
      * @param array $extra
@@ -561,6 +589,7 @@ class Builder
 
     /**
      * 字段自减
+     *
      * @param string $column
      * @param int $amount
      * @param array $extra
@@ -575,7 +604,7 @@ class Builder
      * @param string $sql
      * @param array $bindings
      * @param int $fetchMode
-     * @return PDOStatement|false
+     * @return \PDOStatement|false
      */
     protected function _read(string $sql, array $bindings, int $fetchMode = \PDO::FETCH_ASSOC): \PDOStatement|false
     {
@@ -598,7 +627,7 @@ class Builder
     }
 
     /**
-     * @param Closure $callback
+     * @param \Closure $callback
      * @param string $boolean
      * @return $this
      */
@@ -627,7 +656,7 @@ class Builder
 
     /**
      * @param string $table
-     * @param string|Closure $first
+     * @param string|\Closure $first
      * @param string|null $operator
      * @param string|null $second
      * @param string $type
@@ -770,6 +799,7 @@ class Builder
 
     /**
      * 从字段表达式中拆分出表达式与别名
+     *
      * @param string $column
      * @return array [$expr, $alias]
      */
@@ -785,6 +815,7 @@ class Builder
 
     /**
      * 编译表名, 支持别名
+     *
      * @param string $table
      * @param string|null $alias
      * @return string
@@ -933,6 +964,7 @@ class Builder
 
     /**
      * 设置标识符引用符(不同数据库不同, MySQL为反引号, SQLite/PostgreSQL为双引号)
+     *
      * @param string $quote
      * @return $this
      */
@@ -944,6 +976,7 @@ class Builder
 
     /**
      * 从表名中拆分出表名与别名, 支持 [别名 => 表名] 或 "表名 as 别名"
+     *
      * @param string|array $name
      * @param bool $isPrefixIncluded 表名是否已包含前缀
      * @return array [$table, $alias, $isPrefixIncluded]
@@ -978,6 +1011,7 @@ class Builder
 
     /**
      * 给字段名或表名加上引用符, 防止SQL注入
+     *
      * @param string|\Ddm\Db\Expression $value
      * @return string
      */

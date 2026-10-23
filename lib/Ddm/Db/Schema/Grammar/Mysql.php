@@ -64,7 +64,7 @@ class Mysql extends Grammar
      * @param Table $definition
      * @return string[]
      */
-    protected function compileCreateTableIndexes(string $table, Table $definition): string
+    protected function compileCreateTableIndexes(string $table, Table $definition): array
     {
         $indexes = [];
         foreach ($definition->getIndexDefinitions($table) as $index) {
@@ -80,7 +80,7 @@ class Mysql extends Grammar
      * @param bool $ifNotExists
      * @return string[]
      */
-    protected function compileCreateIndexes(string $table, Table $definition, bool $ifNotExists): string
+    protected function compileCreateIndexes(string $table, Table $definition, bool $ifNotExists): array
     {
         return [];
     }

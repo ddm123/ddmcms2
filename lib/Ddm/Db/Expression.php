@@ -9,7 +9,7 @@ namespace Ddm\Db;
  * @author ddm
  * @copyright (c) 2010-2014 DDMCMS http://jinshui8.com/
  */
-class Expression
+class Expression implements \Stringable
 {
 
     /** @var string */
@@ -20,7 +20,7 @@ class Expression
      */
     public function __construct(string $expression)
     {
-        $this->_expression = (string) $expression;
+        $this->_expression = (string)$expression;
     }
 
     /**

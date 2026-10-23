@@ -12,13 +12,13 @@ namespace Ddm\Image;
 class Gd implements InterfaceImage
 {
 
-    protected mixed $_imageFile = null;
+    protected string $_imageFile = '';
 
     /**
-     * @param mixed $imageFile
+     * @param string $imageFile
      * @return $this
      */
-    public function setImageFile(mixed $imageFile): static
+    public function setImageFile(string $imageFile): static
     {
         $this->_imageFile = $imageFile;
         return $this;
@@ -26,6 +26,7 @@ class Gd implements InterfaceImage
 
     /**
      * 等比例缩放图片
+     *
      * @param string $newImage 另存为这个文件
      * @param int $w
      * @param int $h
@@ -115,12 +116,13 @@ class Gd implements InterfaceImage
                 imagewbmp($_image, $newImage);
                 break;
         }
-        imagedestroy($_image);
+        $_image = null; // PHP8.5后弃用imagedestroy($_image);
         return $this;
     }
 
     /**
      * 生成缩略图, 这个和 setimgsize() 方法不同, 这个会裁剪图片(取图片中间部分)
+     *
      * @param string $newImage 另存为这个文件
      * @param int $width
      * @param int $height
@@ -177,12 +179,13 @@ class Gd implements InterfaceImage
                 imagewbmp($image, $newImage);
                 break;
         }
-        imagedestroy($image);
+        $image = null; // PHP8.5后弃用imagedestroy($image);
         return $this;
     }
 
     /**
      * 给图片加水印
+     *
      * @param string $watermark 可以是一个字符串(水印文字)或图片路径(图片水印)
      * @param string $font 水印文字字体文件, 如果是使用文字作为水印, 该参数是必须的
      * @param int $fontSize
@@ -230,7 +233,7 @@ class Gd implements InterfaceImage
                 imagewbmp($image, $this->_imageFile);
                 break;
         }
-        imagedestroy($image);
+        $image = null; // PHP8.5后弃用imagedestroy($image);
         return $this;
     }
 
@@ -246,14 +249,14 @@ class Gd implements InterfaceImage
         return strtolower(substr($fileName, $i + 1));
     }
 
-    private function _formatColor(mixed $color): mixed
+    private function _formatColor(string $color): array
     {
         $color = empty($color) ? '000000' : str_pad(substr(preg_replace("/[^a-fA-F0-9]/", '', $color), 0, 6), 6, '0');
         $ret = ['r' => hexdec(substr($color, 0, 2)), 'g' => hexdec(substr($color, 2, 2)), 'b' => hexdec(substr($color, 4, 2))];
         return $ret;
     }
 
-    private function _imagecreatefrom(mixed $img, mixed $width = null, mixed $height = null): mixed
+    private function _imagecreatefrom(string $img, ?int $width = null, ?int $height = null): \GdImage|false
     {
         if ($width && $height) {
             $image = imagecreatetruecolor($width, $height);

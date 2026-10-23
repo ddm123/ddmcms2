@@ -14,12 +14,11 @@ use Http\Server\Vars;
 class Request
 {
 
-    protected static mixed $_instance = null;
+    protected static ?Request $_instance = null;
 
-    protected static mixed $_server = null;
+    protected static ?Vars $_server = null;
 
     protected array $_params = [];
-    //预设一些验证正则表达式
 
     private array $_verify = ['int' => '/^[\-\+]?\d+$/', 'float' => '/^[\-\+]?\d+(\.\d+)?$/', 'email' => '/^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$/i', 'legalstr' => "/[^~!#\$%\\^&\\*\\(\\),=\\+\\\\|'\"\\s\\/]+/", 'tel' => '0\d{2,3}-\d{7,8}|\(0\d{2,3}\)\d{7,8}'];
 
@@ -31,6 +30,7 @@ class Request
 
     /**
      * 使用单例模式
+     *
      * @return \Ddm\Request
      */
     public static function singleton(): Request
@@ -40,6 +40,7 @@ class Request
 
     /**
      * 获取$_GET数组某元素的值, 如果$isNum参数为false, 则会直接返回原值, 例如:Is your name O'reilly?不会返回Is your name O\'reilly?";
+     *
      * @param string $key
      * @param bool|string $isNum 是否需要是数字还是使用预设的正则或自定义一个正则来验证
      * @param mixed $default
@@ -52,6 +53,7 @@ class Request
 
     /**
      * 获取$_POST数组某元素的值, 如果$isNum参数为false, 则会直接返回原值, 例如:Is your name O'reilly?不会返回Is your name O\'reilly?";
+     *
      * @param string $key
      * @param bool|string $isNum 是否需要是数字还是使用预设的正则或自定义一个正则来验证
      * @param mixed $default
@@ -64,10 +66,11 @@ class Request
 
     /**
      * 其实就是调用PHP的addslashes()函数, 区别是该方法支持数组甚至多维数组
-     * @param mixed $value
-     * @return mixed
+     *
+     * @param array|string $value
+     * @return array|string
      */
-    public static function addslashes(mixed $value): mixed
+    public static function addslashes(array|string $value): array|string
     {
         if (is_array($value)) {
             foreach ($value as $key => $val) {
@@ -81,10 +84,11 @@ class Request
 
     /**
      * 其实就是调用PHP的stripslashes()函数, 区别是该方法支持数组甚至多维数组
-     * @param mixed $value
-     * @return mixed
+     *
+     * @param array|string $value
+     * @return array|string
      */
-    public function stripslashes(mixed $value): mixed
+    public function stripslashes(array|string $value): array|string
     {
         if (is_array($value)) {
             foreach ($value as $k => $v) {
@@ -98,6 +102,7 @@ class Request
 
     /**
      * Url重定向
+     *
      * @param string $url
      * @param int $redirectCode 默认302跳转
      */
@@ -118,7 +123,7 @@ class Request
     /**
      * 如果参数为一个数组且不想保留不符合条件的元素，可将$default赋值为NULL
      */
-    public function verify(mixed $value, mixed $isNum = false, mixed $default = ''): mixed
+    public function verify(mixed $value, string|bool $isNum = false, mixed $default = ''): mixed
     {
         if (is_array($value)) {
             foreach ($value as $key => $val) {
@@ -137,6 +142,7 @@ class Request
 
     /**
      * 获取$_GET/$_POST或自定义的值
+     *
      * @param string $key
      * @param string $method 'get' or 'post'
      * @param bool|string $isNum
@@ -212,21 +218,19 @@ class Request
         return $p;
     }
 
-    public function check(mixed $value, mixed $isNum = false, mixed $default = ''): mixed
+    public function check(mixed $value, string|bool $isNum = false, mixed $default = ''): mixed
     {
-        if ($value != '') {
-            if (is_string($isNum)) {
-                $value = trim($value);
-                if (isset($this->_verify[$isNum])) {
-                    $isNum = $this->_verify[$isNum];
-                }
-                if (!preg_match($isNum, $value)) {
-                    $value = $default;
-                }
-            } elseif ($isNum && !is_numeric($value)) {
+        if ($value === '' || $value === null) {
+            $value = $default;
+        } else if (is_string($isNum)) {
+            $value = trim($value);
+            if (isset($this->_verify[$isNum])) {
+                $isNum = $this->_verify[$isNum];
+            }
+            if (!preg_match($isNum, $value)) {
                 $value = $default;
             }
-        } elseif ($value === '' || $value === null) {
+        } else if ($isNum && !is_numeric($value)) {
             $value = $default;
         }
         return $value;
@@ -237,6 +241,6 @@ class Request
      */
     public static function server(): Vars
     {
-        return self::$_server === null ? self::$_server = new Vars($_SERVER) : self::$_server;
+        return self::$_server === null ? (self::$_server = new Vars($_SERVER)) : self::$_server;
     }
 }

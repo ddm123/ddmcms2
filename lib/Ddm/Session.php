@@ -14,9 +14,9 @@ use Ddm;
 class Session extends DataObject
 {
 
-    protected static mixed $_instance = null;
+    protected static ?Session $_instance = null;
 
-    protected mixed $_sessionSaveHandler = null;
+    protected ?string $_sessionSaveHandler = null;
 
     public function __construct()
     {
@@ -41,12 +41,13 @@ class Session extends DataObject
 
     /**
      * 使用单例模式
+     *
      * @return \Ddm\Session
      */
     public static function singleton(): Session
     {
         if (self::$_instance === null) {
-            self::$_instance = new Session();
+            self::$_instance = new static();
             self::$_instance->init();
         }
         return self::$_instance;
@@ -107,10 +108,10 @@ class Session extends DataObject
     }
 
     /**
-     * @param string $sessionName
+     * @param string|null $sessionName
      * @return $this
      */
-    public function setSessionName(string $sessionName): static
+    public function setSessionName(?string $sessionName): static
     {
         if ($sessionName) {
             $prefix = '';

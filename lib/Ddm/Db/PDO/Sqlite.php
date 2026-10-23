@@ -2,10 +2,10 @@
 
 namespace Ddm\Db\PDO;
 
-use Ddm;
 use Ddm\Db\Expression;
 use Ddm\Db\InterfaceDb;
 use Ddm\Path;
+use Ddm\Log;
 
 /**
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和使用；
@@ -317,26 +317,6 @@ class Sqlite implements InterfaceDb
      */
     protected function _errorLog(string $log): void
     {
-        if (defined('SITE_ROOT')) {
-            $f = SITE_ROOT . '/data/errors/sqlite/sqlite-errors.txt';
-            $logstring = date('Y-m-d H:i:s') . "\r\n-----------------------------------";
-            $logstring .= "\r\nURL: " . $_SERVER['REQUEST_URI'] . "\r\nIP: " . $_SERVER['REMOTE_ADDR'] . "\r\nUSER_AGENT: " . (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'None') . "\r\nMETHOD: " . $_SERVER['REQUEST_METHOD'];
-            if (!empty($_POST)) {
-                $logstring .= "\r\nPOST_DATA: " . print_r($_POST, true);
-            }
-            if (empty($_SERVER['QUERY_STRING']) && !empty($_GET)) {
-                $logstring .= "\r\nGET_DATA: " . print_r($_GET, true);
-            }
-            $logstring .= "\r\n{$log}";
-            if (is_file($f)) {
-                if (filesize($f) > 4194304) {
-                    rename($f, SITE_ROOT . '/data/errors/sqlite/sqlite-errors-' . date('YmdHis') . '.txt');
-                } else {
-                    Ddm::getHelper('core')->saveFile($f, "\r\n" . $logstring, FILE_APPEND);
-                    return;
-                }
-            }
-            Ddm::getHelper('core')->saveFile($f, $logstring);
-        }
+        Log::saveTo('sqlite/error.log', $log.PHP_EOL.'URL: '.Log::getCurrentUrl(true));
     }
 }

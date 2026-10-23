@@ -108,7 +108,7 @@ class Redis
         $this->ensureConnected();
 
         if (self::$_connections[$this->_connectionKey]['type'] === 'extension') {
-            self::$_connections[$this->_connectionKey]['resource']->setOption(\Redis::OPT_READ_TIMEOUT, $timeout);
+            self::$_connections[$this->_connectionKey]['resource']->setOption(self::$_connections[$this->_connectionKey]['timeout_option_key'], $timeout);
         } else {
             stream_set_timeout(self::$_connections[$this->_connectionKey]['resource'], $timeout);
         }
@@ -166,22 +166,22 @@ class Redis
         return $ignoreNotExists;
     }
 
+    public function command(array $args): mixed
+    {
+        $this->ensureDb();
+        return $this->rawCommand($args);
+    }
+
+    public function buildKey(string $key): string
+    {
+        return $this->_keyPrefix . $key;
+    }
+
     protected function ensureConnected(): void
     {
         if (!isset(self::$_connections[$this->_connectionKey])) {
             self::$_connections[$this->_connectionKey] = $this->_connect($this->_host, $this->_port, $this->_password);
         }
-    }
-
-    protected function buildKey(string $key): string
-    {
-        return $this->_keyPrefix . $key;
-    }
-
-    protected function command(array $args)
-    {
-        $this->ensureDb();
-        return $this->rawCommand($args);
     }
 
     /**
@@ -238,7 +238,7 @@ class Redis
             if ($password !== '' && !$redis->auth($password)) {
                 throw new \RuntimeException('Redis 认证失败');
             }
-            return ['type' => 'extension', 'resource' => $redis, 'currentDb' => $this->_dbId];
+            return ['type' => 'extension', 'resource' => $redis, 'currentDb' => $this->_dbId, 'timeout_option_key' => \Redis::OPT_READ_TIMEOUT];
         }
 
         $address = "tcp://{$host}:{$port}";

@@ -30,7 +30,7 @@ class Path
      *  - Windows 下 join('C:\www', 'web', '/test', './foo') => C:\www\web\test\foo
      *
      * @return string
-     * @throws RuntimeException
+     * @throws \RuntimeException
      */
     public function join(): string
     {
@@ -92,7 +92,7 @@ class Path
      * 获取当前 PHP 进程用户的HOME目录。
      *
      * @return string
-     * @throws RuntimeException
+     * @throws \RuntimeException
      */
     public function getHomeDirectory(): string
     {
@@ -180,7 +180,7 @@ class Path
      *
      * @param string $path
      * @return string
-     * @throws RuntimeException
+     * @throws \RuntimeException
      */
     protected function expandTilde(string $path): string
     {

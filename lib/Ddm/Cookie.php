@@ -26,15 +26,15 @@ class Cookie
 
     protected static mixed $_instance = null;
 
-    protected mixed $_lifetime = null;
+    protected ?array $_lifetime = null;
 
-    protected mixed $_path = null;
+    protected ?array $_path = null;
 
-    protected mixed $_domain = null;
+    protected ?array $_domain = null;
 
-    protected mixed $_isSecure = null;
+    protected ?bool $_isSecure = null;
 
-    protected mixed $_httponly = null;
+    protected ?array $_httponly = null;
 
     protected string $_prefix = '';
 
@@ -45,6 +45,7 @@ class Cookie
 
     /**
      * 使用单例模式
+     *
      * @return \Ddm\Cookie
      */
     public static function singleton(): Cookie
@@ -167,7 +168,11 @@ class Cookie
      */
     public function setHttponly(bool $httponly): static
     {
-        $this->_httponly = (bool) $httponly;
+        if ($this->_httponly) {
+            $this->_httponly['value'] = $httponly;
+        } else {
+            $this->_httponly = ['value' => $httponly];
+        }
         return $this;
     }
 

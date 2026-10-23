@@ -12,16 +12,17 @@ namespace Ddm;
 class Image
 {
 
-    protected mixed $_image = null;
+    protected ?Image\InterfaceImage $_image = null;
 
-    public function __construct(mixed $imageLib = 'gd')
+    public function __construct(string $imageLib = 'Gd')
     {
-        $className = '\Ddm\Image\\' . ucfirst($imageLib);
+        $className = 'Ddm\\Image\\' . $imageLib;
         $this->_image = new $className();
     }
 
     /**
      * 指定一个被修改的图片
+     *
      * @param mixed $imageFile
      * @return \Ddm\Image\InterfaceImage
      */
@@ -32,10 +33,11 @@ class Image
 
     /**
      * 等比例缩放图片
+     *
      * @param string $newImage 另存为这个文件
      * @param int $w
      * @param int $h
-     * @param string $bgcolor 背景填充颜色(十六进制颜色字符串值), 如果为true, 则为白色(#FFFFFF), 也可以是一个文件
+     * @param string|bool $bgcolor 背景填充颜色(十六进制颜色字符串值), 如果为true, 则为白色(#FFFFFF), 也可以是一个文件
      * @param string $mask 附加这张图片在上面
      * @param int|string $padding 相当于CSS的padding, 只有empty($bgcolor)为false时才有效
      * @return \Ddm\Image\InterfaceImage
@@ -47,6 +49,7 @@ class Image
 
     /**
      * 生成缩略图, 这个和 setimgsize() 方法不同, 这个会裁剪图片(取图片中间部分)
+     *
      * @param string $newImage 另存为这个文件
      * @param int $width
      * @param int $height
@@ -60,6 +63,7 @@ class Image
 
     /**
      * 给图片加水印
+     *
      * @param string $watermark 可以是一个字符串(水印文字)或图片路径(图片水印)
      * @param string $font 水印文字字体文件, 如果是使用文字作为水印, 该参数是必须的
      * @param int $fontSize

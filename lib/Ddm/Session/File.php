@@ -15,11 +15,11 @@ use Ddm\Cookie;
 class File implements InterfaceSession
 {
 
-    protected mixed $_lifeTime = null;
+    protected ?float $_lifeTime = null;
 
     protected int $_gcProbability = 30;
 
-    protected mixed $_savePath;
+    protected string $_savePath = '';
 
     protected array $_sessions = [];
 
@@ -168,7 +168,7 @@ class File implements InterfaceSession
     {
         session_set_save_handler([$this, 'open'], [$this, 'close'], [$this, 'read'], [$this, 'write'], [$this, 'destroy'], [$this, 'gc']);
         $path = SITE_ROOT . '/data/session';
-        $this->_savePath = is_dir($path) || mkdir($path, 0755, true) ? $path : false;
+        $this->_savePath = is_dir($path) || mkdir($path, 0755, true) ? $path : '';
         return $this;
     }
 }

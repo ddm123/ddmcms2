@@ -15,13 +15,13 @@ class Column
 {
 
     /** @var string */
-    protected mixed $_name;
+    protected string $_name = '';
 
     /** @var string */
-    protected mixed $_type;
+    protected string $_type = '';
 
     /** @var array */
-    protected mixed $_options;
+    protected array $_options = [];
 
     /** @var bool */
     protected bool $_nullable = false;
@@ -45,13 +45,13 @@ class Column
     protected bool $_hasDefault = false;
 
     /** @var mixed */
-    protected mixed $_default;
+    protected mixed $_default = null;
 
     /** @var bool */
     protected bool $_change = false;
 
     /** @var \Ddm\Db\Schema\Table|null */
-    protected mixed $_table;
+    protected ?Table $_table;
 
     /**
      * @param string $name
@@ -81,9 +81,9 @@ class Column
     /**
      * @return $this
      */
-    public function unsigned(): static
+    public function unsigned(bool $value = true): static
     {
-        $this->_unsigned = true;
+        $this->_unsigned = (bool) $value;
         return $this;
     }
 

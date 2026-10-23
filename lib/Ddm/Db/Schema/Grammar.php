@@ -38,7 +38,7 @@ abstract class Grammar
      * @param bool $ifNotExists
      * @return string[]
      */
-    public function compileCreate(string $table, Table $definition, bool $ifNotExists): string
+    public function compileCreate(string $table, Table $definition, bool $ifNotExists): array
     {
         $columns = $definition->compileColumns();
         foreach ($definition->getForeignKeys() as $foreign) {
@@ -159,7 +159,7 @@ abstract class Grammar
      * @param \Ddm\Db\Schema\Table $definition
      * @return string[]
      */
-    protected function compileCreateTableIndexes(string $table, Table $definition): string
+    protected function compileCreateTableIndexes(string $table, Table $definition): array
     {
         return [];
     }
@@ -170,7 +170,7 @@ abstract class Grammar
      * @param bool $ifNotExists
      * @return string[]
      */
-    protected function compileCreateIndexes(string $table, Table $definition, bool $ifNotExists): string
+    protected function compileCreateIndexes(string $table, Table $definition, bool $ifNotExists): array
     {
         $statements = [];
         foreach ($definition->getIndexDefinitions($table) as $index) {

@@ -14,9 +14,7 @@ define('GET_MQG', false);
 define('SITE_ROOT', __DIR__);
 define('MODULES_FOLDER', 'modules');
 define('DESIGN_FOLDER', 'design');
-defined('E_RECOVERABLE_ERROR') or define('E_RECOVERABLE_ERROR', 4096);
-defined('E_DEPRECATED') or define('E_DEPRECATED', 8192);
-defined('E_USER_DEPRECATED') or define('E_USER_DEPRECATED', 16384);
+
 set_include_path(
     SITE_ROOT . DIRECTORY_SEPARATOR . 'lib' . PATH_SEPARATOR
     . SITE_ROOT . DIRECTORY_SEPARATOR . MODULES_FOLDER . PATH_SEPARATOR
